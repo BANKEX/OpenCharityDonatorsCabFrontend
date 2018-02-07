@@ -18,18 +18,33 @@ import { AppRoutes } from './app.routing';
 // App Component
 import { AppComponent } from './app.component';
 
+import { MatDialogModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+// Incoming Donation Modal
+import { IncomingDonationDetailedModal } from './dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
+
+import 'hammerjs';
+
 @NgModule({
     imports: [
         BrowserModule,
         RouterModule.forRoot(AppRoutes, { useHash: true }),
         NgbModule.forRoot(),
-        PerfectScrollbarModule
+        PerfectScrollbarModule,
+        HttpModule,
+        MatDialogModule,
+        BrowserAnimationsModule
     ],
     declarations: [
         AppComponent,
         CommonLayoutComponent,
         AuthenticationLayoutComponent,
-        Sidebar_Directives
+        Sidebar_Directives,
+        IncomingDonationDetailedModal
+    ],
+    entryComponents: [
+      IncomingDonationDetailedModal
     ],
     providers: [],
     bootstrap: [AppComponent]

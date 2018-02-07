@@ -1,0 +1,20 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Incoming Donation Detailed</h4>
+    </div>
+    <div class="modal-body">
+        <p>
+            <b>Address:</b> {{data.address}} <br>
+            <b>Amount:</b> {{data.amount}} <br>
+            <b>Date:</b> {{data.date}} <br>
+            <b>Note:</b> {{data.note}} <br>
+            <b>Name:</b> {{data.realWorldIdentifier}} <br>
+            <b>Tags:</b> {{data.tags}} <br>
+        </p>
+    </div>
+    <div class="modal-footer no-border">
+        <div class="text-right">
+            <button class="btn btn-primary btn-sm" data-dismiss="modal" (click)="onCloseCancel()">Close</button>
+        </div>
+    </div>
+</div>

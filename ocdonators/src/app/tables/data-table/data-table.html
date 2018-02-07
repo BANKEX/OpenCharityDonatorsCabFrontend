@@ -19,32 +19,32 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let item of data" (click)="openDetailedtIncomingDonation(item.address)" class="cursor-p">
                                     <td>
                                         <div class="checkbox mrg-left-20">
-                                            <input id="task10" name="task10" type="checkbox">
-                                            <label for="task10"></label>
+                                            <input id="task10_{{item.realWorldIdentifier}}" name="task10" type="checkbox">
+                                            <label for="task10_{{item.realWorldIdentifier}}"></label>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="relative mrg-top-15">
                                             <span class="status online"> </span>
-                                            <span class="pdd-left-20">Test transaction</span>
+                                            <span class="pdd-left-20">{{item.realWorldIdentifier}}</span>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="mrg-top-15">
-                                            <b class="text-dark font-size-16">$168.00</b>
+                                            <b class="text-dark font-size-16">${{item.amount}}</b>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="mrg-top-15">
-                                            <b class="text-info font-size-16">Notes here...</b>
+                                            <b class="text-info font-size-16">{{item.note}}</b>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="mrg-top-15">
-                                            <span>8 May 2017</span>
+                                            <span>{{item.date}}</span>
                                         </div>
                                     </td>
                                     <!-- <td>
