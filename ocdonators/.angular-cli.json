@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "ocdonators"
+    "name": "foo"
   },
   "apps": [
     {
@@ -19,9 +19,16 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "../node_modules/bootstrap/scss/bootstrap.scss",
+        "../node_modules/pace-js/themes/blue/pace-theme-minimal.css",
+        "assets/scss/app.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/pace-js/pace.min.js",
+        "../node_modules/jquery/dist/jquery.js",
+        "../node_modules/popper.js/dist/umd/popper.min.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
