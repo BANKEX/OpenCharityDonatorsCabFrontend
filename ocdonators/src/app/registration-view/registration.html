@@ -1,0 +1,72 @@
+<div class="app">
+    <div class="authentication">
+        <div class="sign-up">
+            <div class="row no-mrg-horizon">
+                <div class="col-md-4 no-pdd-horizon d-none d-md-block">
+                    <div class="full-height bg" style="background-image: url('assets/images/others/img-31.jpg')">
+                        <div class="vertical-align full-height pdd-horizon-70">
+                            <div class="table-cell">
+                                <div class="row">
+                                    <div class="mr-auto ml-auto col-md-10">
+                                        <div class="text-right">
+                                            <img class="img-responsive mrg-left-auto mrg-btm-15" src="assets/images/logo/logo-white.png" alt="" width="170">
+                                            <p class="text-white lead text-opacity lh-1-7">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 bg-white no-pdd-horizon">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="full-height height-100">
+                                <div class="vertical-align full-height pdd-horizon-70">
+                                    <div class="table-cell">
+                                        <div class="pdd-horizon-15">
+                                            <h1 class="mrg-btm-30">Create Your account</h1>
+                                            <form [formGroup]="registrationForm" (submit)="registrationSubmit()">
+                                                <div class="form-group">
+                                                    <label class="text-normal text-dark">First Name</label>
+                                                    <input type="text" class="form-control" id="name" formControlName="name">
+                                                    <span *ngIf="isControlInvalid('name')" class="error-label">Field is required!</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-normal text-dark">Last Name</label>
+                                                    <input type="text" class="form-control" id="surname" formControlName="surname">
+                                                    <span *ngIf="isControlInvalid('surname')" class="error-label">Field is required!</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-normal text-dark">Email Address</label>
+                                                    <input type="email" class="form-control" id="email" formControlName="email">
+                                                    <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-normal text-dark">Password</label>
+                                                    <input type="password" class="form-control" placeholder="Password" id="pass" formControlName="pass">
+                                                    <span *ngIf="isControlInvalid('pass')" class="error-label">Field is required!</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-normal text-dark">Confirm Password</label>
+                                                    <input type="password" class="form-control" placeholder="Password" id="reppass" formControlName="reppass">
+                                                    <span *ngIf="isControlInvalid('reppass')" class="error-label">Field is required!</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block border-radius-6" [disabled]="!registrationForm.valid">Create New Account</button>
+                                                </div>
+                                            </form>
+                                            <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+                                            <hr>
+                                            <small>By signing up you agree to out <a href="">Terms &amp; Policy</a></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

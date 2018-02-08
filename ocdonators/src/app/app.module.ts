@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Incoming Donation Modal
 import { IncomingDonationDetailedModal } from './dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
+import { AlertModal } from './modals/alert-modal/alert-modal.component';
 
 import 'hammerjs';
 
@@ -41,10 +42,12 @@ import 'hammerjs';
         CommonLayoutComponent,
         AuthenticationLayoutComponent,
         Sidebar_Directives,
-        IncomingDonationDetailedModal
+        IncomingDonationDetailedModal,
+        AlertModal
     ],
     entryComponents: [
-      IncomingDonationDetailedModal
+      IncomingDonationDetailedModal,
+      AlertModal
     ],
     providers: [],
     bootstrap: [AppComponent]

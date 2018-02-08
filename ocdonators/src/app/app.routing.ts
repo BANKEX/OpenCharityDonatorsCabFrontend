@@ -19,6 +19,14 @@ export const AppRoutes: Routes = [
                 loadChildren: './dashboard/dashboard.module#DashboardModule'
             }
         ]
+    },
+    {
+      path: 'registration',
+      loadChildren: './registration-view/registration.module#RegistrationModule'
+    },
+    {
+      path: 'login',
+      loadChildren: './login-view/login.module#LoginModule'
     }
 ];
 

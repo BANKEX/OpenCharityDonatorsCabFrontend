@@ -1,0 +1,15 @@
+<div class="modal-content" style="width: 500px;">
+    <div class="modal-header">
+        <h4>{{data.title}}</h4>
+    </div>
+    <div class="modal-body">
+        <p>
+            {{data.content}}
+        </p>
+    </div>
+    <div class="modal-footer no-border">
+        <div class="text-right">
+            <button class="btn btn-primary btn-sm" data-dismiss="modal" (click)="onCloseCancel()">{{data.closeLabel}}</button>
+        </div>
+    </div>
+</div>

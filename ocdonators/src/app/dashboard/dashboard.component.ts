@@ -2,7 +2,7 @@
 /// <reference path="../shared/typings/ammaps/ammaps.d.ts" />
 
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
-import { HttpService } from './httpService/http-service';
+import { HttpService } from '../httpService/http-service';
 import 'rxjs/add/operator/takeWhile';
 
 
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
     constructor( private httpService: HttpService) {}
 
     ngOnInit(){
-      this.getIncomingDonations('http://localhost:8080/api/dapp/getIncomingDonations');
+      this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations`);
     }
 
     getIncomingDonations(url) {
