@@ -3,13 +3,15 @@
 
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpService } from '../httpService/http-service';
+import { HttpService } from '../services/http-service';
 import 'rxjs/add/operator/takeWhile';
 
 import { matchingFileds } from '../components/validators/validators';
 import { AlertModal } from '../modals/alert-modal/alert-modal.component';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+
+import { UserService } from '../services/user-service';
 
 
 @Component({
@@ -22,10 +24,12 @@ export class RegistrationComponent implements OnInit {
 
     private httpAlive: boolean = true;
 
-    constructor( private httpService: HttpService, private fb: FormBuilder, private dialog: MatDialog, private router: Router) {}
+    constructor( private httpService: HttpService, private fb: FormBuilder, private dialog: MatDialog, private router: Router, private userService: UserService) {}
 
     ngOnInit(){
       this.initForm();
+
+      this.userService.removeUserDataLocal();
     }
 
     initForm(){

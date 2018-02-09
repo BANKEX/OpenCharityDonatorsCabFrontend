@@ -25,6 +25,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IncomingDonationDetailedModal } from './dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
 import { AlertModal } from './modals/alert-modal/alert-modal.component';
 
+import { GuardService } from './services/guard-service';
+import { UserService } from './services/user-service';
+import { CookieService } from 'ngx-cookie-service';
+
 import 'hammerjs';
 
 @NgModule({
@@ -49,7 +53,7 @@ import 'hammerjs';
       IncomingDonationDetailedModal,
       AlertModal
     ],
-    providers: [],
+    providers: [GuardService, UserService, CookieService],
     bootstrap: [AppComponent]
 })
 

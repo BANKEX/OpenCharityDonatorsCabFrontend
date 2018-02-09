@@ -2,7 +2,7 @@
 /// <reference path="../shared/typings/ammaps/ammaps.d.ts" />
 
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
-import { HttpService } from '../httpService/http-service';
+import { HttpService } from '../services/http-service';
 import 'rxjs/add/operator/takeWhile';
 
 

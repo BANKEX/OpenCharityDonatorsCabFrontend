@@ -17,18 +17,20 @@
                                 <div class="pdd-horizon-15">
                                     <h2>Login</h2>
                                     <p class="mrg-btm-15 font-size-13">Please enter your user name and password to login</p>
-                                    <form>
+                                    <form [formGroup]="loginForm" (submit)="loginFormSubmit()">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="User name">
+                                            <input type="email" class="form-control" placeholder="User email" id="email" formControlName="email">
+                                            <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password">
+                                            <input type="password" class="form-control" placeholder="Password" id="pass" formControlName="pass">
+                                            <span *ngIf="isControlInvalid('pass')" class="error-label">Field is required!</span>
                                         </div>
                                         <div class="checkbox font-size-12">
                                             <input id="agreement" name="agreement" type="checkbox">
                                             <label for="agreement">Keep Me Signed In</label>
                                         </div>
-                                        <button class="btn btn-info">Login</button>
+                                        <button type="submit" class="btn btn-info" [disabled]="!loginForm.valid">Login</button>
                                     </form>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { IncomingDonationDetailedModal } from '../../dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
-import { HttpService } from '../../httpService/http-service';
+import { HttpService } from '../../services/http-service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component ({
