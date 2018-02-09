@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
 
     private httpAlive: boolean = true;
 
-    constructor( private httpService: HttpService, private fb: FormBuilder, private userService: UserService) {}
+    constructor( private httpService: HttpService, private fb: FormBuilder, private userService: UserService, private dialog: MatDialog) {}
 
     ngOnInit(){
       this.initForm();
@@ -77,7 +77,16 @@ export class LoginComponent implements OnInit {
                 },
                 error => {
                   console.log(error);
+                  this.openRegErrorModal();
                 });
+        }
+
+
+        openRegErrorModal() {
+          const dialogRef = this.dialog.open(AlertModal, {data: {title: "Login error!", content: "The username or password you entered is incorrect.", closeLabel: "Cancel"}});
+          dialogRef.afterClosed()
+            .takeWhile(() => this.httpAlive)
+            .subscribe(result => {})
         }
 
 }
