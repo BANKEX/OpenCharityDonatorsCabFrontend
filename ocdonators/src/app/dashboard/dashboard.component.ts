@@ -15,11 +15,13 @@ export class DashboardComponent implements OnInit {
 
     private httpAlive: boolean = true;
     public incomingDonations = [];
+    public charityEvents = [];
 
     constructor( private httpService: HttpService) {}
 
     ngOnInit(){
       this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations`);
+      this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents`);
     }
 
     getIncomingDonations(url) {
@@ -28,6 +30,18 @@ export class DashboardComponent implements OnInit {
         .subscribe(
             response => {
               this.incomingDonations = response.data;
+            },
+            error => {
+              console.log(error);
+            });
+    }
+
+    getCharityEvents(url) {
+      this.httpService.httpGet(url)
+        .takeWhile(() => this.httpAlive)
+        .subscribe(
+            response => {
+              this.charityEvents = response.data;
             },
             error => {
               console.log(error);

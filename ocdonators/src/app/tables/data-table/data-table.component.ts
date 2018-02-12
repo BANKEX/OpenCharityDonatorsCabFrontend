@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
+import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { IncomingDonationDetailedModal } from '../../dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
 import { HttpService } from '../../services/http-service';
@@ -9,41 +10,75 @@ import 'rxjs/add/operator/takeWhile';
     templateUrl: 'data-table.html'
 })
 export class DataTableComponent implements OnInit {
-    dtOptions: DataTables.Settings = {};
-    private httpAlive: boolean = true;
+    private httpAlive = true;
 
-    @Input() data;
+    @Input() incomingDonationsData;
+    @Input() charityEventsData;
+
+    public tabsArray = [];
 
     constructor(private dialog: MatDialog, private httpService: HttpService) {}
 
-    ngOnInit(): void {
-        this.dtOptions = {
-            pagingType: 'full_numbers'
-        };
-    }
+    ngOnInit(): void {}
 
     openDetailedtIncomingDonation(hash) {
       this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonation/${hash}`)
         .takeWhile(() => this.httpAlive)
         .subscribe(
           response => {
-            this.openDetailedModal(response.data);
+            let newData = response.data;
+            newData['type'] = 'donation';
+            this.addToTabs(newData);
           },
           error => {
             console.log(error);
           });
     }
 
-    openDetailedModal(data) {
-      const dialogRef = this.dialog.open(IncomingDonationDetailedModal, {data: data});
-      dialogRef.afterClosed()
+    openDetailedtCharityEvent(hash) {
+      this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvent/${hash}`)
         .takeWhile(() => this.httpAlive)
-        .subscribe(result => {
-          //console.log(result);
-        })
+        .subscribe(
+          response => {
+            let newData = response.data;
+            newData['type'] = 'events';
+            this.addToTabs(newData);
+          },
+          error => {
+            console.log(error);
+          });
     }
 
     ngOnDestroy() {
       this.httpAlive = false;
+    }
+
+    addToTabs(data) {
+      let tab = false;
+      const vm = this;
+      this.tabsArray.filter(
+        function(item) {
+          if (item.address === data.address) {
+            console.log(tab);
+            tab = true;
+          }
+        }
+      );
+      console.log(tab);
+      if (tab === false) {
+        this.tabsArray.push(data);
+      }
+      if (!this.tabsArray.length) {
+        this.tabsArray.push(data);
+      }
+    }
+
+    removeFromTabs(id) {
+      for (const item in this.tabsArray) {
+        if (this.tabsArray[item].address === id) {
+          this.tabsArray.splice(this.tabsArray.indexOf(this.tabsArray[item]), 1);
+        }
+      }
+      console.log(this.tabsArray);
     }
 }

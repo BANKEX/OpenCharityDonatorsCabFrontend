@@ -3092,3 +3092,20 @@
     margin-top: 7px;
     color: #ff3c3c;
 }
+
+.mt-3px {
+    margin-top: 3px;
+}
+
+.mt-15px {
+    margin-top: 15px;
+}
+
+.nav-item-tab {
+    display: flex;
+    align-items: center;
+    .ei {
+        font-size: 8px;
+        cursor: pointer;
+    }
+}

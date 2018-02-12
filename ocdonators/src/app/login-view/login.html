@@ -26,11 +26,14 @@
                                             <input type="password" class="form-control" placeholder="Password" id="pass" formControlName="pass">
                                             <span *ngIf="isControlInvalid('pass')" class="error-label">Field is required!</span>
                                         </div>
-                                        <div class="checkbox font-size-12">
+                                        <div class="checkbox font-size-13 inline-block no-mrg-vertical no-pdd-vertical">
                                             <input id="agreement" name="agreement" type="checkbox">
                                             <label for="agreement">Keep Me Signed In</label>
                                         </div>
-                                        <button type="submit" class="btn btn-info" [disabled]="!loginForm.valid">Login</button>
+                                        <div class="pull-right mt-3px">
+                                            <a (click)="openForgotPassModal()" style="color: #0f9aee; cursor: pointer;">Forgot Password?</a>
+                                        </div>
+                                        <button type="submit" class="btn btn-info mt-15px" [disabled]="!loginForm.valid">Login</button>
                                     </form>
                                 </div>
                             </div>

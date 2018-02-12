@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { ThemeConstants } from '../shared/config/theme-constant';
 
 import { DashboardRoutes } from './dashboard-routing.module';
-import { DataTablesModule } from 'angular-datatables';
 
 import { CommonModule } from '@angular/common';
 
@@ -14,7 +13,6 @@ import { DataTableComponent } from '../tables/data-table/data-table.component';
 @NgModule({
     imports: [
         RouterModule.forChild(DashboardRoutes),
-        DataTablesModule,
         CommonModule
     ],
     declarations: [

@@ -8,6 +8,7 @@ import 'rxjs/add/operator/takeWhile';
 
 import { matchingFileds } from '../components/validators/validators';
 import { AlertModal } from '../modals/alert-modal/alert-modal.component';
+import { ForgotPassModal } from '../modals/forgot-pass-modal/forgot-pass-modal.component';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
@@ -84,6 +85,28 @@ export class LoginComponent implements OnInit {
 
         openRegErrorModal() {
           const dialogRef = this.dialog.open(AlertModal, {data: {title: "Login error!", content: "The username or password you entered is incorrect.", closeLabel: "Cancel"}});
+          dialogRef.afterClosed()
+            .takeWhile(() => this.httpAlive)
+            .subscribe(result => {})
+        }
+
+
+        openForgotPassModal() {
+          const dialogRef = this.dialog.open(ForgotPassModal, {});
+          dialogRef.afterClosed()
+            .takeWhile(() => this.httpAlive)
+            .subscribe(result => {
+              if (result == 'success') {
+                this.openForgotPassResultModal('Forgot password', 'Please check your email to change your password!', 'OK');
+              }
+              else if (result == 'error') {
+                this.openForgotPassResultModal('Forgot password', 'Error occurred! Please try again.', 'Cancel');
+              }
+            })
+        }
+
+        openForgotPassResultModal(title, content, closeLabel) {
+          const dialogRef = this.dialog.open(AlertModal, {data: {title: title, content: content, closeLabel: closeLabel}});
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
             .subscribe(result => {})

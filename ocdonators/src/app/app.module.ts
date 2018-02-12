@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpModule, Http } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 
 // Layout Modules
 import { CommonLayoutComponent } from './common/common-layout.component';
@@ -23,7 +24,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Incoming Donation Modal
 import { IncomingDonationDetailedModal } from './dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
+
+// App modals
 import { AlertModal } from './modals/alert-modal/alert-modal.component';
+import { ForgotPassModal } from './modals/forgot-pass-modal/forgot-pass-modal.component';
 
 import { GuardService } from './services/guard-service';
 import { UserService } from './services/user-service';
@@ -39,7 +43,8 @@ import 'hammerjs';
         PerfectScrollbarModule,
         HttpModule,
         MatDialogModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        FormsModule
     ],
     declarations: [
         AppComponent,
@@ -47,11 +52,13 @@ import 'hammerjs';
         AuthenticationLayoutComponent,
         Sidebar_Directives,
         IncomingDonationDetailedModal,
-        AlertModal
+        AlertModal,
+        ForgotPassModal
     ],
     entryComponents: [
       IncomingDonationDetailedModal,
-      AlertModal
+      AlertModal,
+      ForgotPassModal
     ],
     providers: [GuardService, UserService, CookieService],
     bootstrap: [AppComponent]

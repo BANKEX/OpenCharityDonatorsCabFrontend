@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { ThemeConstants } from '../shared/config/theme-constant';
 
 import { LoginRoutes } from './login-routing.module';
-import { DataTablesModule } from 'angular-datatables';
 
 import { CommonModule } from '@angular/common';
 
