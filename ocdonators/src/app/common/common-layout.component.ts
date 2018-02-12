@@ -42,6 +42,7 @@ export class CommonLayoutComponent implements OnInit {
     }
 
 
-    ngOnInit(){
+    ngOnInit() {
+
     }
 }

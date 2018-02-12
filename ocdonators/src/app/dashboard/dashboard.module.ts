@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ThemeConstants } from '../shared/config/theme-constant';
 
 import { DashboardRoutes } from './dashboard-routing.module';
 
@@ -19,8 +18,6 @@ import { DataTableComponent } from '../tables/data-table/data-table.component';
         DashboardComponent,
         DataTableComponent,
     ],
-    providers: [
-        ThemeConstants
-    ]
+    providers: []
 })
 export class DashboardModule { }

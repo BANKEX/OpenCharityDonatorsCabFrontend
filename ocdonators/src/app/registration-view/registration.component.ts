@@ -1,6 +1,3 @@
-// Typing for Ammap
-/// <reference path="../shared/typings/ammaps/ammaps.d.ts" />
-
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpService } from '../services/http-service';
@@ -22,17 +19,22 @@ import { UserService } from '../services/user-service';
 export class RegistrationComponent implements OnInit {
     registrationForm: FormGroup;
 
-    private httpAlive: boolean = true;
+    private httpAlive = true;
 
-    constructor( private httpService: HttpService, private fb: FormBuilder, private dialog: MatDialog, private router: Router, private userService: UserService) {}
+    constructor(
+      private httpService: HttpService,
+      private fb: FormBuilder,
+      private dialog: MatDialog,
+      private router: Router,
+      private userService: UserService) {}
 
-    ngOnInit(){
+    ngOnInit() {
       this.initForm();
 
       this.userService.removeUserDataLocal();
     }
 
-    initForm(){
+    initForm() {
       this.registrationForm = this.fb.group({
        name: ['',
         Validators.required
@@ -53,7 +55,8 @@ export class RegistrationComponent implements OnInit {
       ]
       },
       { validator: matchingFileds('pass', 'reppass')}
-      )};
+      );
+     }
 
      isControlInvalid(controlName: string): boolean {
         const control = this.registrationForm.controls[controlName];
@@ -75,7 +78,7 @@ export class RegistrationComponent implements OnInit {
           'firstName': this.registrationForm.value['name'],
           'lastName': this.registrationForm.value['surname'],
           'password': this.registrationForm.value['pass']
-        }
+        };
         this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/signup`, JSON.stringify(data))
             .takeWhile(() => this.httpAlive)
             .subscribe(
@@ -89,21 +92,26 @@ export class RegistrationComponent implements OnInit {
       }
 
     openRegSuccessModal() {
-      const dialogRef = this.dialog.open(AlertModal, {data: {title: "Registration success!", content: "You succesfully create account!", closeLabel: "Login"}});
+      const dialogRef = this.dialog.open(
+        AlertModal, {data: {title: 'Registration success!', content: 'You succesfully create account!', closeLabel: 'Login'}}
+      );
       dialogRef.afterClosed()
         .takeWhile(() => this.httpAlive)
         .subscribe(result => {
-          if (result == false) {
-            this.router.navigate(['/login'])
+          if (result === false) {
+            this.router.navigate(['/login']);
           }
-        })
+        });
     }
 
     openRegErrorModal() {
-      const dialogRef = this.dialog.open(AlertModal, {data: {title: "Registration error!", content: "Registration error! Please try again.", closeLabel: "Cancel"}});
+      const dialogRef = this.dialog.open(
+        AlertModal,
+        {data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
+      );
       dialogRef.afterClosed()
         .takeWhile(() => this.httpAlive)
-        .subscribe(result => {})
+        .subscribe(result => {});
     }
 
     ngOnDestroy() {

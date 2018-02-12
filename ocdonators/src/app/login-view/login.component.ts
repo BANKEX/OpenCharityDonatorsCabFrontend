@@ -1,6 +1,3 @@
-// Typing for Ammap
-/// <reference path="../shared/typings/ammaps/ammaps.d.ts" />
-
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpService } from '../services/http-service';
@@ -24,7 +21,7 @@ export class LoginComponent implements OnInit {
 
     loginForm: FormGroup;
 
-    private httpAlive: boolean = true;
+    private httpAlive = true;
 
     constructor( private httpService: HttpService, private fb: FormBuilder, private userService: UserService, private dialog: MatDialog) {}
 
@@ -68,7 +65,7 @@ export class LoginComponent implements OnInit {
           const data = {
             'email': this.loginForm.value['email'],
             'password': this.loginForm.value['pass']
-          }
+          };
           this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/login`, JSON.stringify(data))
               .takeWhile(() => this.httpAlive)
               .subscribe(
@@ -84,10 +81,13 @@ export class LoginComponent implements OnInit {
 
 
         openRegErrorModal() {
-          const dialogRef = this.dialog.open(AlertModal, {data: {title: "Login error!", content: "The username or password you entered is incorrect.", closeLabel: "Cancel"}});
+          const dialogRef = this.dialog.open(
+            AlertModal,
+            {data: {title: 'Login error!', content: 'The username or password you entered is incorrect.', closeLabel: 'Cancel'}}
+          );
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
-            .subscribe(result => {})
+            .subscribe(result => {});
         }
 
 
@@ -96,20 +96,19 @@ export class LoginComponent implements OnInit {
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
             .subscribe(result => {
-              if (result == 'success') {
+              if (result === 'success') {
                 this.openForgotPassResultModal('Forgot password', 'Please check your email to change your password!', 'OK');
-              }
-              else if (result == 'error') {
+              } else if (result === 'error') {
                 this.openForgotPassResultModal('Forgot password', 'Error occurred! Please try again.', 'Cancel');
               }
-            })
+            });
         }
 
         openForgotPassResultModal(title, content, closeLabel) {
           const dialogRef = this.dialog.open(AlertModal, {data: {title: title, content: content, closeLabel: closeLabel}});
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
-            .subscribe(result => {})
+            .subscribe(result => {});
         }
 
 }

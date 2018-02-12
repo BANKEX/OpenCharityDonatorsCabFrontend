@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ThemeConstants } from '../shared/config/theme-constant';
 
 import { RegistrationRoutes } from './registration-routing.module';
 
@@ -22,8 +21,6 @@ import { RegistrationComponent } from './registration.component';
     declarations: [
       RegistrationComponent
     ],
-    providers: [
-        ThemeConstants
-    ]
+    providers: []
 })
 export class RegistrationModule { }

@@ -10,7 +10,6 @@ import { AuthenticationLayoutComponent } from './common/authentication-layout.co
 
 // Directives
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Sidebar_Directives } from './shared/directives/side-nav.directive';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 // Routing Module
@@ -50,7 +49,6 @@ import 'hammerjs';
         AppComponent,
         CommonLayoutComponent,
         AuthenticationLayoutComponent,
-        Sidebar_Directives,
         IncomingDonationDetailedModal,
         AlertModal,
         ForgotPassModal
