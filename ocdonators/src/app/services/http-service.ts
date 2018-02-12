@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class HttpService {
 
-  public baseAPIurl = 'http://localhost:8080';
+  public baseAPIurl = 'https://donatorscab.staging.bankex.team';
 
   constructor( private http: Http) {}
 

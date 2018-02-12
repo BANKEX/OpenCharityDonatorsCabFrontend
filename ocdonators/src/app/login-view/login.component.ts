@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 
 import { UserService } from '../services/user-service';
 
-
 @Component({
     templateUrl: 'login.html',
     providers: [HttpService]
@@ -25,7 +24,7 @@ export class LoginComponent implements OnInit {
 
     constructor( private httpService: HttpService, private fb: FormBuilder, private userService: UserService, private dialog: MatDialog) {}
 
-    ngOnInit(){
+    ngOnInit() {
       this.initForm();
 
       this.userService.removeUserDataLocal();
@@ -35,7 +34,7 @@ export class LoginComponent implements OnInit {
       this.httpAlive = false;
     }
 
-    initForm(){
+    initForm() {
       this.loginForm = this.fb.group({
        email: ['', [
         Validators.required,
@@ -49,7 +48,6 @@ export class LoginComponent implements OnInit {
 
       isControlInvalid(controlName: string): boolean {
         const control = this.loginForm.controls[controlName];
-
         const result = control.invalid && control.touched;
 
        return result;
