@@ -15,8 +15,7 @@ import { RegistrationComponent } from './registration.component';
         RouterModule.forChild(RegistrationRoutes),
         CommonModule,
         ReactiveFormsModule,
-        FormsModule,
-        ReactiveFormsModule
+        FormsModule
     ],
     declarations: [
       RegistrationComponent
