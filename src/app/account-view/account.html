@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="page-title">
+        <h4>Account Setting</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-heading border bottom">
+                            <h4 class="card-title">General Info</h4>
+                        </div>
+                        <div class="card-block">
+                            <form [formGroup]="userForm" (submit)="userSubmit()">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"> <b>Email</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="email" formControlName="email">
+                                        <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"> <b>First name</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="firstName" formControlName="firstName">
+                                        <span *ngIf="isControlInvalid('firstName')" class="error-label">Field is required!</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"> <b>Last name</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="lastName" formControlName="lastName">
+                                        <span *ngIf="isControlInvalid('lastName')" class="error-label">Field is required!</span>
+                                    </div>
+                                </div>
+                                <!-- <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"> <b>Tags</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mrg-top-10"><span *ngFor="let item of userData.tags">{{}}</span></p>
+                                    </div>
+                                </div> -->
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button (click)="undisabledInputs()" class="btn btn-info mt-15px pull-right" *ngIf="inputDisabled">Edit</button>
+                                        <button type="submit" class="btn btn-info mt-15px pull-right" [disabled]="!userForm.valid" *ngIf="!inputDisabled">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

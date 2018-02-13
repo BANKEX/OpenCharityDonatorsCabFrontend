@@ -31,6 +31,14 @@ export const AppRoutes: Routes = [
         ]
     },
     {
+      path: 'account',
+      component: CommonLayoutComponent,
+      loadChildren: './account-view/account.module#AccountModule',
+      data: {
+        roleAccess: ['USER']
+      }
+    },
+    {
       path: 'registration',
       loadChildren: './registration-view/registration.module#RegistrationModule',
       data: {
