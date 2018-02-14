@@ -1,5 +1,6 @@
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { HttpService } from '../services/http-service';
+import { SocketService } from '../services/socket.service';
 import 'rxjs/add/operator/takeWhile';
 
 
@@ -11,10 +12,11 @@ import 'rxjs/add/operator/takeWhile';
 export class DashboardComponent implements OnInit {
 
     private httpAlive = true;
+
     public incomingDonations = [];
     public charityEvents = [];
 
-    constructor( private httpService: HttpService) {}
+    constructor( private httpService: HttpService, private socketService: SocketService) {}
 
     ngOnInit() {
       this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations`);
@@ -22,11 +24,25 @@ export class DashboardComponent implements OnInit {
     }
 
     getIncomingDonations(url) {
-      this.httpService.httpGet(url)
+      this.httpService.getSocketData(url)
         .takeWhile(() => this.httpAlive)
         .subscribe(
             response => {
-              this.incomingDonations = response.data;
+              console.log(response['_body']);
+              this.getIncomingDonationsSockets(response['_body']);
+            },
+            error => {
+              console.log(error);
+            });
+    }
+
+    getIncomingDonationsSockets(id) {
+      this.socketService.getData(id)
+        .takeWhile(() => this.httpAlive)
+        .subscribe(
+            response => {
+              console.log(JSON.parse(response));
+              this.incomingDonations.push(JSON.parse(response));
             },
             error => {
               console.log(error);
@@ -34,11 +50,24 @@ export class DashboardComponent implements OnInit {
     }
 
     getCharityEvents(url) {
-      this.httpService.httpGet(url)
+      this.httpService.getSocketData(url)
         .takeWhile(() => this.httpAlive)
         .subscribe(
             response => {
-              this.charityEvents = response.data;
+              this.getCharityEventsSockets(response['_body']);
+            },
+            error => {
+              console.log(error);
+            });
+    }
+
+    getCharityEventsSockets(id) {
+      this.socketService.getData(id)
+        .takeWhile(() => this.httpAlive)
+        .subscribe(
+            response => {
+              console.log(JSON.parse(response));
+              this.charityEvents.push(JSON.parse(response));
             },
             error => {
               console.log(error);

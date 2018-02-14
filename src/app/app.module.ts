@@ -31,6 +31,7 @@ import { ForgotPassModal } from './modals/forgot-pass-modal/forgot-pass-modal.co
 import { GuardService } from './services/guard-service';
 import { UserService } from './services/user-service';
 import { CookieService } from 'ngx-cookie-service';
+import { SocketService } from './services/socket.service';
 
 import 'hammerjs';
 
@@ -58,7 +59,7 @@ import 'hammerjs';
       AlertModal,
       ForgotPassModal
     ],
-    providers: [GuardService, UserService, CookieService],
+    providers: [GuardService, UserService, CookieService, SocketService],
     bootstrap: [AppComponent]
 })
 
