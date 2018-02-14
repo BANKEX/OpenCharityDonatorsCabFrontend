@@ -7,7 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable()
 export class HttpService {
 
-  public baseAPIurl = 'http://127.0.0.1:8080';
+  public baseAPIurl = '';
 
   constructor( private http: Http, private cookieService: CookieService) {}
 
