@@ -1,20 +1,20 @@
 import { Component, Inject,  AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { HttpService } from '../../services/http-service';
+import { HttpService } from '../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component({
-  templateUrl: './forgot-pass-modal.component.html',
-  styleUrls: ['./forgot-pass-modal.component.scss'],
+  templateUrl: './forgot-pass-modal.html',
+  styleUrls: ['./forgot-pass-modal.scss'],
   providers: [HttpService]
 })
-export class ForgotPassModal {
+export class ForgotPassModalComponent {
 
   public emailModel = '';
 
   private httpAlive: boolean = true;
 
-  constructor (private httpService: HttpService, private thisDialogRef: MatDialogRef<ForgotPassModal>, @Inject(MAT_DIALOG_DATA) public data) {}
+  constructor (private httpService: HttpService, private thisDialogRef: MatDialogRef<ForgotPassModalComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
 
   ngOnDestroy() {

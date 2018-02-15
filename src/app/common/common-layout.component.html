@@ -32,7 +32,7 @@
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
-                        <li clas="nav-item" routerLinkActive="active">
+                        <li clas="nav-item" routerLinkActive="active" *ngIf="userService.userData?.userRole == 'USER'">
                             <a class="mrg-top-30" href="" [routerLink]="['/account']">
                                 <span class="icon-holder">
                                     <i class="ei-star-1"></i>
@@ -58,7 +58,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <ul class="nav-right">
+                        <ul class="nav-right" *ngIf="userService.userData?.userRole == 'USER'">
                             <li>
                                 <a class="side-nav-toggle" routerLink="/login">Logout</a>
                             </li>

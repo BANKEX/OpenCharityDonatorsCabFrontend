@@ -1,18 +1,18 @@
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpService } from '../services/http-service';
+import { HttpService } from '../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
-import { matchingFileds } from '../components/validators/validators';
-import { AlertModal } from '../modals/alert-modal/alert-modal.component';
+import { matchingFileds } from '../../reusable-components/custom-validators/validators';
+import { AlertModalComponent } from '../../app-modals/alert-modal/alert-modal.component';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
-import { UserService } from '../services/user-service';
+import { UserService } from '../../app-services/user.service';
 
 
 @Component({
-    templateUrl: 'registration.html',
+    templateUrl: 'registration.component.html',
     providers: [HttpService]
 })
 
@@ -93,7 +93,7 @@ export class RegistrationComponent implements OnInit {
 
     openRegSuccessModal() {
       const dialogRef = this.dialog.open(
-        AlertModal, {data: {title: 'Registration success!', content: 'You succesfully create account!', closeLabel: 'Login'}}
+        AlertModalComponent, {data: {title: 'Registration success!', content: 'You succesfully create account!', closeLabel: 'Login'}}
       );
       dialogRef.afterClosed()
         .takeWhile(() => this.httpAlive)
@@ -106,7 +106,7 @@ export class RegistrationComponent implements OnInit {
 
     openRegErrorModal() {
       const dialogRef = this.dialog.open(
-        AlertModal,
+        AlertModalComponent,
         {data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
       );
       dialogRef.afterClosed()

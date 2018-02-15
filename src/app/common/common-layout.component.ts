@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../app-services/user.service';
+import 'rxjs/add/operator/takeWhile';
 
 @Component({
     selector: 'app-dashboard',
@@ -6,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class CommonLayoutComponent implements OnInit {
+
+    private httpAlive = true;
 
     public app: any;
     public headerThemes: any;
@@ -15,7 +19,7 @@ export class CommonLayoutComponent implements OnInit {
     public headerSelected: any;
     public sidenavSelected: any;
 
-    constructor() {
+    constructor( public userService: UserService ) {
         this.app = {
             layout: {
                 sidePanelOpen: false,
@@ -45,4 +49,5 @@ export class CommonLayoutComponent implements OnInit {
     ngOnInit() {
 
     }
+
 }

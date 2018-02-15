@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { GuardService } from './services/guard-service';
+import { GuardService } from './app-services/guard.service';
 
 // Layouts
 import { CommonLayoutComponent } from './common/common-layout.component';
@@ -10,7 +10,6 @@ export const AppRoutes: Routes = [
     {
         path: '',
         redirectTo: 'dashboard',
-        canActivate: [GuardService],
         pathMatch: 'full',
         data: {
           roleAccess: ['USER']
@@ -19,38 +18,29 @@ export const AppRoutes: Routes = [
     {
         path: '',
         component: CommonLayoutComponent,
-        canActivate: [GuardService],
-        data: {
-          roleAccess: ['USER']
-        },
         children: [
             {
                 path: 'dashboard',
-                loadChildren: './dashboard/dashboard.module#DashboardModule'
+                loadChildren: './app-views/dashboard-view/dashboard.module#DashboardModule'
             }
         ]
     },
     {
       path: 'account',
       component: CommonLayoutComponent,
-      loadChildren: './account-view/account.module#AccountModule',
+      canActivate: [GuardService],
+      loadChildren: './app-views/account-view/account.module#AccountModule',
       data: {
         roleAccess: ['USER']
       }
     },
     {
       path: 'registration',
-      loadChildren: './registration-view/registration.module#RegistrationModule',
-      data: {
-        roleAccess: ['UNAUTHORIZED']
-      }
+      loadChildren: './app-views/registration-view/registration.module#RegistrationModule'
     },
     {
       path: 'login',
-      loadChildren: './login-view/login.module#LoginModule',
-      data: {
-        roleAccess: ['UNAUTHORIZED']
-      }
+      loadChildren: './app-views/login-view/login.module#LoginModule'
     }
 ];
 
