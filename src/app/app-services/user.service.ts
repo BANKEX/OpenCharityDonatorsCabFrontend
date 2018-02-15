@@ -8,7 +8,7 @@ export class UserService {
  public userData: object = {
   id: '',
   userRole: 'UNAUTHORIZED'
- }
+ };
 
  constructor(private cookieService: CookieService, private router: Router) {}
 
@@ -16,7 +16,7 @@ export class UserService {
   let tokenData = token.split('.');
   tokenData = JSON.parse(atob(tokenData[1]));
   // Get cookie expired
-  let tokenExp = new Date(tokenData.exp * 1000);
+  const tokenExp = new Date(tokenData.exp * 1000);
   // Set User info to cookie
   this.cookieService.set('userData', token, tokenExp, '/');
 
@@ -24,7 +24,7 @@ export class UserService {
  }
 
  getUserDataLocal() {
-  if (this.cookieService.get('userData') != undefined && this.cookieService.get('userData') !== '') {
+  if (this.cookieService.get('userData') !== undefined && this.cookieService.get('userData') !== '') {
     return JSON.parse(atob(this.cookieService.get('userData').split('.')[1]));
    } else {
     return '';
@@ -32,10 +32,10 @@ export class UserService {
  }
 
  setUserDataLocal(data) {
-   if(this.cookieService.check('userData')) {
+   if (this.cookieService.check('userData')) {
     this.userData['id'] = this.getUserDataLocal()['_id'];
     this.userData['userRole'] = 'USER';
-    if (data == 'login') {
+    if (data === 'login') {
       this.router.navigate(['/dashboard']);
     }
    }
