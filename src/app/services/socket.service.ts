@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
 
 export class SocketService {
-    private url = 'http://127.0.0.1:8080';
+    private url = '';
     private socket;
 
     constructor() {
