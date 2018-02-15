@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="page-title">
-        <h4>Incoming Donations List</h4>
+        <h4>Dashboard</h4>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -73,7 +73,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>RealWorldIdentifier</th>
+                                        <th>Name</th>
                                         <th>Payed</th>
                                         <th>Raised</th>
                                         <th>Target</th>
@@ -123,99 +123,24 @@
                     <!-- Repeat tabs start -->
                     <div role="tabpanel" class="tab-pane" *ngFor="let item of tabsArray" id="card-tab-2-{{item.address}}">
                         <div class="table-overflow" *ngIf="item.type == 'donation'">
-                            <table class="table table-lg table-hover" datatable>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>RealWorldIdentifier</th>
-                                        <th>Payed</th>
-                                        <th>Raised</th>
-                                        <th>Target</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="cursor-p">
-                                        <td>
-                                            <div class="checkbox mrg-left-20">
-                                                <input id="task10_{{item.realWorldIdentifier}}" name="task10" type="checkbox">
-                                                <label for="task10_{{item.realWorldIdentifier}}"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="relative mrg-top-15">
-                                                <span class="status online"> </span>
-                                                <span class="pdd-left-20">{{item.realWorldIdentifier}}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <b class="text-dark font-size-16">${{item.amount}}</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <b class="text-info font-size-16">{{item.note}}</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <span>{{item.date}}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="card card-body">
+                                <p><b>Address:</b>{{item.address}}</p>
+                                <p><b>Amount:</b> {{item.amount}}</p>
+                                <p><b>Date:</b> {{item.date}}</p>
+                                <p><b>Note:</b> {{item.note}}</p>
+                                <p><b>Name:</b> {{item.realWorldIdentifier}}</p>
+                                <p><b>Tags:</b> {{item.tags}}</p>
+                            </div>
                         </div>
                         <div class="table-overflow" *ngIf="item.type == 'events'">
-                            <table class="table table-lg table-hover" datatable>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>RealWorldIdentifier</th>
-                                        <th>Payed</th>
-                                        <th>Raised</th>
-                                        <th>Target</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="cursor-p">
-                                        <td>
-                                            <div class="checkbox mrg-left-20">
-                                                <input id="task10_{{item.realWorldIdentifier}}" name="task10" type="checkbox">
-                                                <label for="task10_{{item.realWorldIdentifier}}"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="relative mrg-top-15">
-                                                <span class="status online"> </span>
-                                                <span class="pdd-left-20">{{item.name}}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <b class="text-dark font-size-16">${{item.payed}}</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <b class="text-info font-size-16">{{item.raised}}</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <b class="text-info font-size-16">{{item.target}}</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mrg-top-15">
-                                                <span>{{item.date}}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="card card-body">
+                                <p><b>Address:</b>{{item.address}}</p>
+                                <p><b>Name:</b> {{item.name}}</p>
+                                <p><b>Payed:</b> {{item.payed}}</p>
+                                <p><b>Raised:</b> {{item.raised}}</p>
+                                <p><b>Target:</b> {{item.target}}</p>
+                                <p><b>Date:</b> {{item.date}}</p>
+                            </div>
                         </div>
                     </div>
                     <!-- Repeat tabs end -->
