@@ -9,6 +9,7 @@ import 'rxjs/add/operator/takeWhile';
 
 export class CommonLayoutComponent implements OnInit {
 
+    public userRole: string;
     private httpAlive = true;
 
     public app: any;
@@ -47,7 +48,7 @@ export class CommonLayoutComponent implements OnInit {
 
 
     ngOnInit() {
-
+      this.userRole = this.userService.userData['userRole'];
     }
 
 }
