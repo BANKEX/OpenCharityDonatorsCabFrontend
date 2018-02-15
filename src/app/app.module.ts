@@ -21,17 +21,14 @@ import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-// Incoming Donation Modal
-import { IncomingDonationDetailedModal } from './dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
-
 // App modals
-import { AlertModal } from './modals/alert-modal/alert-modal.component';
-import { ForgotPassModal } from './modals/forgot-pass-modal/forgot-pass-modal.component';
+import { AlertModalComponent } from './app-modals/alert-modal/alert-modal.component';
+import { ForgotPassModalComponent } from './app-modals/forgot-pass-modal/forgot-pass-modal.component';
 
-import { GuardService } from './services/guard-service';
-import { UserService } from './services/user-service';
+import { GuardService } from './app-services/guard.service';
+import { UserService } from './app-services/user.service';
 import { CookieService } from 'ngx-cookie-service';
-import { SocketService } from './services/socket.service';
+import { SocketService } from './app-services/socket.service';
 
 import 'hammerjs';
 
@@ -50,14 +47,12 @@ import 'hammerjs';
         AppComponent,
         CommonLayoutComponent,
         AuthenticationLayoutComponent,
-        IncomingDonationDetailedModal,
-        AlertModal,
-        ForgotPassModal
+        AlertModalComponent,
+        ForgotPassModalComponent
     ],
     entryComponents: [
-      IncomingDonationDetailedModal,
-      AlertModal,
-      ForgotPassModal
+      AlertModalComponent,
+      ForgotPassModalComponent
     ],
     providers: [GuardService, UserService, CookieService, SocketService],
     bootstrap: [AppComponent]

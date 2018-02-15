@@ -1,18 +1,18 @@
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpService } from '../services/http-service';
+import { HttpService } from '../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
-import { matchingFileds } from '../components/validators/validators';
-import { AlertModal } from '../modals/alert-modal/alert-modal.component';
-import { ForgotPassModal } from '../modals/forgot-pass-modal/forgot-pass-modal.component';
+import { matchingFileds } from '../../reusable-components/custom-validators/validators';
+import { AlertModalComponent } from '../../app-modals/alert-modal/alert-modal.component';
+import { ForgotPassModalComponent } from '../../app-modals/forgot-pass-modal/forgot-pass-modal.component';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
-import { UserService } from '../services/user-service';
+import { UserService } from '../../app-services/user.service';
 
 @Component({
-    templateUrl: 'login.html',
+    templateUrl: 'login.component.html',
     providers: [HttpService]
 })
 
@@ -26,8 +26,6 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
       this.initForm();
-
-      this.userService.removeUserDataLocal();
     }
 
     ngOnDestroy() {
@@ -80,7 +78,7 @@ export class LoginComponent implements OnInit {
 
         openRegErrorModal() {
           const dialogRef = this.dialog.open(
-            AlertModal,
+            AlertModalComponent,
             {data: {title: 'Login error!', content: 'The username or password you entered is incorrect.', closeLabel: 'Cancel'}}
           );
           dialogRef.afterClosed()
@@ -90,7 +88,7 @@ export class LoginComponent implements OnInit {
 
 
         openForgotPassModal() {
-          const dialogRef = this.dialog.open(ForgotPassModal, {});
+          const dialogRef = this.dialog.open(ForgotPassModalComponent, {});
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
             .subscribe(result => {
@@ -103,7 +101,7 @@ export class LoginComponent implements OnInit {
         }
 
         openForgotPassResultModal(title, content, closeLabel) {
-          const dialogRef = this.dialog.open(AlertModal, {data: {title: title, content: content, closeLabel: closeLabel}});
+          const dialogRef = this.dialog.open(AlertModalComponent, {data: {title: title, content: content, closeLabel: closeLabel}});
           dialogRef.afterClosed()
             .takeWhile(() => this.httpAlive)
             .subscribe(result => {});

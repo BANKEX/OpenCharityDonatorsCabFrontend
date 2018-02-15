@@ -2,7 +2,7 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Config } from '../config/config';
+import { AppConfig } from '../app-config/app.config';
 
 import * as io from 'socket.io-client';
 
@@ -10,8 +10,7 @@ export class SocketService {
     private socket;
 
     constructor() {
-        this.socket = io({path: '/api/ws'});
-        console.log(this.socket);
+        this.socket = io(`${AppConfig.API_URL}`, {path: `/api/ws`});
     }
 
     public getData = (data) => {
@@ -20,6 +19,6 @@ export class SocketService {
               observer.next(dataArr);
           });
       });
-   }
+    }
 
 }

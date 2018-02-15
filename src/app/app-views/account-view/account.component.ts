@@ -1,11 +1,11 @@
 import { Component, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpService } from '../services/http-service';
+import { HttpService } from '../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
 
 @Component({
-    templateUrl: 'account.html',
+    templateUrl: 'account.component.html',
     providers: [HttpService]
 })
 

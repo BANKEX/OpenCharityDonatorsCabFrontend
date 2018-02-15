@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { UserService } from './user-service';
+import { UserService } from './user.service';
 
 
 @Injectable()
@@ -15,7 +15,7 @@ export class GuardService implements CanActivate {
 
  checkUserRole(accessRoles, userRole) {
   if (accessRoles.data['roleAccess'].indexOf(userRole) === -1) {
-   this.router.navigate(['/login']);
+   this.router.navigate(['/dashboard']);
    return false;
   } else {
    return true;

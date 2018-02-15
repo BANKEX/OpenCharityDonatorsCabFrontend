@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
-import { IncomingDonationDetailedModal } from '../../dashboard/IncomingDonationDetailedModal/incoming-donation-modal.component';
-import { HttpService } from '../../services/http-service';
+import { HttpService } from '../../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component ({
@@ -59,12 +58,10 @@ export class DataTableComponent implements OnInit {
       this.tabsArray.filter(
         function(item) {
           if (item.address === data.address) {
-            console.log(tab);
             tab = true;
           }
         }
       );
-      console.log(tab);
       if (tab === false) {
         this.tabsArray.push(data);
       }
@@ -79,6 +76,5 @@ export class DataTableComponent implements OnInit {
           this.tabsArray.splice(this.tabsArray.indexOf(this.tabsArray[item]), 1);
         }
       }
-      console.log(this.tabsArray);
     }
 }

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 // Dashboard Component
 import { DashboardComponent } from './dashboard.component';
-import { DataTableComponent } from '../tables/data-table/data-table.component';
+import { DataTableComponent } from '../../reusable-components/tables/data-table/data-table.component';
 
 @NgModule({
     imports: [
