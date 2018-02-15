@@ -1,13 +1,14 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { Config } from '../config/config';
 
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class HttpService {
 
-  public baseAPIurl = '';
+  public baseAPIurl = Config.API_URL;
 
   constructor( private http: Http, private cookieService: CookieService) {}
 
