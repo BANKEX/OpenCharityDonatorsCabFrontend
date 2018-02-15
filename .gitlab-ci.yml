@@ -5,10 +5,11 @@ stages:
   - build
   - release
   - deploy-stage
+  - deploy-prod
 
-build-stage:
+build:
   image: node:alpine
-  stage: build-stage
+  stage: build
   before_script:
     - apk add --update git
     - apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
@@ -23,9 +24,9 @@ build-stage:
       - dist
     expire_in: 1h
 
-release-stage:
+release:
   image: docker:latest
-  stage: release-stage
+  stage: release
   before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
   script:
@@ -57,3 +58,31 @@ deploy-stage:
     name: staging
     url: https://donatorscab.staging.bankex.team
   when: manual
+
+deploy-prod:
+  stage: deploy-prod
+  image: tmaier/docker-compose
+  variables:
+    DOCKER_HOST: "tcp://charity-prod.westeurope.cloudapp.azure.com:2376"
+    DOCKER_TLS_VERIFY: "1"
+    SERVERNAME: donatorscab.bankex.team
+    EMAIL: "om@bankexfoundation.org"
+    DOCKER_CERT_PATH: "/certs"
+  before_script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$DOCKER_CA" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$DOCKER_CERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$DOCKER_KEY" > $DOCKER_CERT_PATH/key.pem
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+    - echo "IMAGE=$IMAGE" > .env ; echo "VIRTUAL_HOST=$SERVERNAME" >> .env ; echo "LETSENCRYPT_HOST=$SERVERNAME" >> .env; echo "LETSENCRYPT_EMAIL=$EMAIL" >> .env
+  script:
+    - docker-compose -f docker/docker-compose.yml down
+    - docker rmi $IMAGE || echo "image not exist"
+    - docker pull $IMAGE
+    - docker-compose -f docker/docker-compose.yml up -d
+  environment:
+    name: prod
+    url: https://donatorscab.bankex.team
+  when: manual
+  only:
+    - production
