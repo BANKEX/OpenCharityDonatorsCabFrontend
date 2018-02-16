@@ -91,31 +91,31 @@ export class RegistrationComponent implements OnInit {
               });
       }
 
-    openRegSuccessModal() {
-      const dialogRef = this.dialog.open(
-        AlertModalComponent, {data: {title: 'Registration success!', content: 'You succesfully create account!', closeLabel: 'Login'}}
-      );
-      dialogRef.afterClosed()
-        .takeWhile(() => this.httpAlive)
-        .subscribe(result => {
-          if (result === false) {
-            this.router.navigate(['/login']);
-          }
-        });
-    }
+      openRegSuccessModal() {
+        const dialogRef = this.dialog.open(
+          AlertModalComponent, {data: {title: 'Registration success!', content: 'You successfully created account!', closeLabel: 'Login'}}
+        );
+        dialogRef.afterClosed()
+          .takeWhile(() => this.httpAlive)
+          .subscribe(result => {
+            if (result === false) {
+              this.router.navigate(['/login']);
+            }
+          });
+      }
 
-    openRegErrorModal() {
-      const dialogRef = this.dialog.open(
-        AlertModalComponent,
-        {data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
-      );
-      dialogRef.afterClosed()
-        .takeWhile(() => this.httpAlive)
-        .subscribe(result => {});
-    }
+      openRegErrorModal() {
+        const dialogRef = this.dialog.open(
+          AlertModalComponent,
+          {data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
+        );
+        dialogRef.afterClosed()
+          .takeWhile(() => this.httpAlive)
+          .subscribe(result => {});
+      }
 
-    ngOnDestroy() {
-      this.httpAlive = false;
-    }
+      ngOnDestroy() {
+        this.httpAlive = false;
+      }
 
 }

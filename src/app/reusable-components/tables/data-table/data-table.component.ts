@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { HttpService } from '../../../app-services/http.service';
@@ -14,7 +14,10 @@ export class DataTableComponent implements OnInit {
     @Input() incomingDonationsData;
     @Input() charityEventsData;
 
+    @ViewChild('defaultTab', {read: ElementRef}) defaultTab: ElementRef;
+
     public tabsArray = [];
+    public activeTab: string = 'default';
 
     constructor(private dialog: MatDialog, private httpService: HttpService) {}
 
@@ -74,7 +77,19 @@ export class DataTableComponent implements OnInit {
       for (const item in this.tabsArray) {
         if (this.tabsArray[item].address === id) {
           this.tabsArray.splice(this.tabsArray.indexOf(this.tabsArray[item]), 1);
+          if (this.activeTab === 'custom') {
+            const defaultTab = this.defaultTab.nativeElement as HTMLElement;
+            defaultTab.click();
+          }
         }
       }
+    }
+
+    setTabValue(value) {
+      this.activeTab = value;
+    }
+
+    checkBoxChange(event) {
+      event.stopPropagation();
     }
 }

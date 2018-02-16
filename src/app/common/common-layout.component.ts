@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../app-services/user.service';
+import { HttpService } from '../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component({
     selector: 'app-dashboard',
-    templateUrl: './common-layout.component.html'
+    templateUrl: './common-layout.component.html',
+    providers: [HttpService]
 })
 
 export class CommonLayoutComponent implements OnInit {
@@ -20,7 +23,11 @@ export class CommonLayoutComponent implements OnInit {
     public headerSelected: any;
     public sidenavSelected: any;
 
-    constructor( public userService: UserService ) {
+    constructor(
+      public userService: UserService,
+      public httpService: HttpService,
+      private router: Router
+    ) {
         this.app = {
             layout: {
                 sidePanelOpen: false,
@@ -49,6 +56,18 @@ export class CommonLayoutComponent implements OnInit {
 
     ngOnInit() {
       this.userRole = this.userService.userData['userRole'];
+    }
+
+    logOut() {
+      this.httpService.logOutUser(`${this.httpService.baseAPIurl}/api/user/logout`)
+        .takeWhile(() => this.httpAlive)
+        .subscribe(
+          response => {
+            this.router.navigate(['/login']);
+          },
+          error => {
+            this.router.navigate(['/login']);
+          });
     }
 
 }

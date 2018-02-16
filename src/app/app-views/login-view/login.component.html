@@ -26,10 +26,7 @@
                                             <input type="password" class="form-control" placeholder="Password" id="pass" formControlName="pass">
                                             <span *ngIf="isControlInvalid('pass')" class="error-label">Field is required!</span>
                                         </div>
-                                        <div class="checkbox font-size-13 inline-block no-mrg-vertical no-pdd-vertical">
-                                            <input id="agreement" name="agreement" type="checkbox">
-                                            <label for="agreement">Keep Me Signed In</label>
-                                        </div>
+                                        <div class="checkbox font-size-13 inline-block no-mrg-vertical no-pdd-vertical"></div>
                                         <div class="pull-right mt-3px">
                                             <a (click)="openForgotPassModal()" style="color: #0f9aee; cursor: pointer;">Forgot Password?</a>
                                         </div>
@@ -40,7 +37,7 @@
                         </div>
                         <div class="login-footer">
                             <img class="img-responsive inline-block" src="assets/images/logo/logo.png" width="100" alt="">
-                            <span class="font-size-13 pull-right pdd-top-10">Don't have an account? <a routerLink="/registration">Sign Up Now</a></span>
+                            <span class="font-size-13 pull-right pdd-top-5">Don't have an account? <a routerLink="/registration">Sign Up Now</a></span>
                         </div>
                     </div>
                 </div>

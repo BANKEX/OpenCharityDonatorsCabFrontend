@@ -15,6 +15,7 @@ export class HttpService {
   httpGet(url: string) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', `${this.cookieService.get('userData')}`);
     const options = new RequestOptions({headers: headers});
     return this.http.get(url, options)
       .map(respose => respose.json() || '')
@@ -64,6 +65,18 @@ export class HttpService {
   getSocketData(url: string) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    const options = new RequestOptions({headers: headers});
+    return this.http.get(url, options)
+      .map(respose => {
+        return respose;
+      })
+      .catch ((error: any) => Observable.throw(error.json() || 'Server error'));
+  }
+
+  logOutUser(url) {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', `${this.cookieService.get('userData')}`);
     const options = new RequestOptions({headers: headers});
     return this.http.get(url, options)
       .map(respose => {

@@ -1,22 +1,19 @@
 <div class="container-fluid">
-    <div class="page-title">
-        <h4>Dashboard</h4>
-    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="tab-info">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a href="#card-tab-1" class="nav-link active" role="tab" data-toggle="tab">Пожервования</a>
+                            <a href="#card-tab-1" class="nav-link active" role="tab" data-toggle="tab" #defaultTab (click)="setTabValue('default')">Пожервования</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#card-tab-2" class="nav-link" role="tab" data-toggle="tab">События</a>
+                            <a href="#card-tab-2" class="nav-link" role="tab" data-toggle="tab" (click)="setTabValue('default')">События</a>
                         </li>
                         <li class="nav-item nav-item-tab" *ngFor="let item of tabsArray">
-                            <a *ngIf="item.type == 'donation'" href="#card-tab-2-{{item.address}}" class="nav-link" role="tab" data-toggle="tab">{{item.realWorldIdentifier}}</a>
-                            <a *ngIf="item.type == 'events'" href="#card-tab-2-{{item.address}}" class="nav-link" role="tab" data-toggle="tab">{{item.name}}</a>
-                            <div class="ei ei-unchecked" (click)="removeFromTabs(item.address)"></div>
+                            <a *ngIf="item.type == 'donation'" href="#card-tab-2-{{item.address}}" class="nav-link" role="tab" data-toggle="tab" (click)="setTabValue( 'custom')">{{item.realWorldIdentifier}}</a>
+                            <a *ngIf="item.type == 'events'" href="#card-tab-2-{{item.address}}" class="nav-link" role="tab" data-toggle="tab" (click)="setTabValue( 'custom')">{{item.name}}</a>
+                            <div class="ei ei-unchecked" (click)="removeFromTabs(item.address);"></div>
                         </li>
                     </ul>
                 </div>
@@ -36,9 +33,9 @@
                                 <tbody>
                                     <tr *ngFor="let item of incomingDonationsData" (click)="openDetailedtIncomingDonation(item.address)" class="cursor-p">
                                         <td>
-                                            <div class="checkbox mrg-left-20">
-                                                <input id="task10_{{item.realWorldIdentifier}}" name="task10" type="checkbox">
-                                                <label for="task10_{{item.realWorldIdentifier}}"></label>
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox">
+                                                <label for="task10_{{item.address}}"></label>
                                             </div>
                                         </td>
                                         <td>
@@ -83,9 +80,9 @@
                                 <tbody>
                                     <tr *ngFor="let item of charityEventsData" (click)="openDetailedtCharityEvent(item.address)" class="cursor-p">
                                         <td>
-                                            <div class="checkbox mrg-left-20">
-                                                <input id="task10_{{item.realWorldIdentifier}}" name="task10" type="checkbox">
-                                                <label for="task10_{{item.realWorldIdentifier}}"></label>
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox">
+                                                <label for="task10_{{item.address}}"></label>
                                             </div>
                                         </td>
                                         <td>
