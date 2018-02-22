@@ -7,17 +7,17 @@ import { FormsModule } from '@angular/forms';
 // Layout Modules
 import { CommonLayoutComponent } from './common/common-layout.component';
 import { AuthenticationLayoutComponent } from './common/authentication-layout.component';
+import { NotFound404Component } from './not-found404.component';
 
 // Directives
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 // Routing Module
-import { AppRoutes } from './app.routing';
+import { appRoutes } from './app.routing';
 
 // App Component
 import { AppComponent } from './app.component';
-
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -32,10 +32,11 @@ import { SocketService } from './app-services/socket.service';
 
 import 'hammerjs';
 
+
 @NgModule({
     imports: [
         BrowserModule,
-        RouterModule.forRoot(AppRoutes, { useHash: true }),
+        RouterModule.forRoot(appRoutes, { useHash: true }),
         NgbModule.forRoot(),
         PerfectScrollbarModule,
         HttpModule,
@@ -48,7 +49,8 @@ import 'hammerjs';
         CommonLayoutComponent,
         AuthenticationLayoutComponent,
         AlertModalComponent,
-        ForgotPassModalComponent
+        ForgotPassModalComponent,
+        NotFound404Component
     ],
     entryComponents: [
       AlertModalComponent,

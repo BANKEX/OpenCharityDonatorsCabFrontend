@@ -6,7 +6,7 @@ import { GuardService } from './app-services/guard.service';
 // Layouts
 import { CommonLayoutComponent } from './common/common-layout.component';
 
-export const AppRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         redirectTo: 'dashboard',

@@ -9,15 +9,15 @@ import 'rxjs/add/operator/takeWhile';
     templateUrl: 'data-table.html'
 })
 export class DataTableComponent implements OnInit {
-    private httpAlive = true;
-
     @Input() incomingDonationsData;
     @Input() charityEventsData;
 
     @ViewChild('defaultTab', {read: ElementRef}) defaultTab: ElementRef;
 
     public tabsArray = [];
+    public tabidex = 'card-tab-1';
     public activeTab: string = 'default';
+    private httpAlive = true;
 
     constructor(private dialog: MatDialog, private httpService: HttpService) {}
 
@@ -51,10 +51,6 @@ export class DataTableComponent implements OnInit {
           });
     }
 
-    ngOnDestroy() {
-      this.httpAlive = false;
-    }
-
     addToTabs(data) {
       let tab = false;
       const vm = this;
@@ -85,11 +81,17 @@ export class DataTableComponent implements OnInit {
       }
     }
 
-    setTabValue(value) {
+    setTabValue(value, tabid) {
+      this.tabidex = tabid;
       this.activeTab = value;
     }
 
     checkBoxChange(event) {
       event.stopPropagation();
+    }
+
+    // tslint:disable-next-line:use-life-cycle-interface
+    ngOnDestroy() {
+      this.httpAlive = false;
     }
 }
