@@ -189,11 +189,11 @@ const clientConfig = function webpackConfig(): WebpackConfig {
       }),
       ...MY_CLIENT_PRODUCTION_PLUGINS,
     );
-    if (!E2E && !WATCH) {
-      config.plugins.push(
-        new BundleAnalyzerPlugin({ analyzerPort: 5000 })
-      );
-    }
+    // if (!E2E && !WATCH) {
+    //   config.plugins.push(
+    //     new BundleAnalyzerPlugin({ analyzerPort: 5000 })
+    //   );
+    // }
   }
 
   config.cache = true;
