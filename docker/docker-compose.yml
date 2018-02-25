@@ -15,4 +15,4 @@ services:
 networks:
   default:
     external:
-      name: webproxy
+      name: frontend_default
