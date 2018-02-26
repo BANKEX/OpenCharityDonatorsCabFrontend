@@ -1,7 +1,7 @@
 "use strict";
 const compression = require('compression')
 const express = require('express'),
-path = require('path');
+	path = require('path');
 
 const E2E_PORT = require('./constants').E2E_PORT;
 const HOST = require('./constants').HOST;
@@ -14,7 +14,7 @@ app.use(compression());
 app.use(express.static('dist/client'));
 
 const renderIndex = (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'dist/client/index.html'));
+	res.sendFile(path.resolve(__dirname, 'dist/client/index.html'));
 }
 
 app.get('/*', renderIndex);
@@ -25,5 +25,5 @@ if (ENV === 'e2e:server') { e2e = E2E_PORT };
 const PORT = e2e || PROD_PORT;
 
 app.listen(PORT, () => {
-  console.log(`Listening on: http://${HOST}:${PORT}`);
+	console.log(`Listening on: http://${HOST}:${PORT}`);
 });

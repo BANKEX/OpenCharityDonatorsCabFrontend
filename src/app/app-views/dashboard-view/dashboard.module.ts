@@ -5,6 +5,8 @@ import { DashboardRoutes } from './dashboard-routing.module';
 
 import { CommonModule } from '@angular/common';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 // Dashboard Component
 import { DashboardComponent } from './dashboard.component';
 import { DataTableComponent } from '../../reusable-components/tables/data-table/data-table.component';
@@ -12,7 +14,9 @@ import { DataTableComponent } from '../../reusable-components/tables/data-table/
 @NgModule({
     imports: [
         RouterModule.forChild(DashboardRoutes),
-        CommonModule
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [
         DashboardComponent,

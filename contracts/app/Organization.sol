@@ -72,8 +72,8 @@ contract Organization {
     /**
    * @dev Add new CharityEvent to Organization
    */
-    function addCharityEvent(string _name, uint _target, uint _payed) public onlyAdmin returns(address) {
-        CharityEvent charityEvent = new CharityEvent(_name, _target, _payed);
+    function addCharityEvent(string _name, uint _target, uint _payed, bytes1 _tags) public onlyAdmin returns(address) {
+        CharityEvent charityEvent = new CharityEvent(_name, _target, _payed, _tags);
 
         // add charityEvent to charityEvents list
         charityEventIndex[charityEventCount] = charityEvent;
@@ -86,8 +86,8 @@ contract Organization {
         return charityEvent;
     }
 
-    function setIncomingDonation(string _realWorldIdentifier, uint _amount, string _note) public onlyAdmin returns(address) {
-        address incomingDonation = addIncomingDonation(_realWorldIdentifier, _amount, _note);
+    function setIncomingDonation(string _realWorldIdentifier, uint _amount, string _note, bytes1 _tags) public onlyAdmin returns(address) {
+        address incomingDonation = addIncomingDonation(_realWorldIdentifier, _amount, _note, _tags);
 
         token.mint(incomingDonation, _amount);
     }
@@ -95,9 +95,9 @@ contract Organization {
     /**
      * @dev Add new IncomingDonation to Organization
      */
-    function addIncomingDonation(string _realWorldIdentifier, uint _amount, string _note) internal returns(address) {
+    function addIncomingDonation(string _realWorldIdentifier, uint _amount, string _note, bytes1 _tags) internal returns(address) {
 
-        IncomingDonation incomingDonation = new IncomingDonation(token, _realWorldIdentifier, _note);
+        IncomingDonation incomingDonation = new IncomingDonation(token, _realWorldIdentifier, _note, _tags);
 
         // add incomingDonation to incomingDonations list
         incomingDonationIndex[incomingDonationCount] = incomingDonation;
@@ -112,6 +112,13 @@ contract Organization {
 
     function isAdmin() view external returns (bool) {
         return(admins[msg.sender]);
+    }
+
+    /**
+     * @dev Add or revoke admin rights for address
+     */
+    function setAdmin(address admin, bool value) public onlyAdmin {
+        admins[admin] = value;
     }
 
 

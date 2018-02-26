@@ -1,0 +1,18 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-4" *ngFor="let item of dashboardListData">
+            <a class="card" routerLink="/dashboard/{{item.ORGaddress}}">
+                <div class="card-block">
+                    <h4 class="card-title">{{item.name}}</h4>
+                    <div class="mrg-top-20">
+                        <p>Charity events - {{item.charityEventCount}}</p>
+                        <p>Incoming donation - {{item.incomingDonationCount}}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>

@@ -14,7 +14,6 @@ import { LoginComponent } from './login.component';
     imports: [
         RouterModule.forChild(LoginRoutes),
         CommonModule,
-        ReactiveFormsModule,
         FormsModule,
         ReactiveFormsModule
     ],

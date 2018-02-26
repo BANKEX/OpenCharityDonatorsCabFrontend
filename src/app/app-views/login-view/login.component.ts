@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
       this.userService.removeUserDataLocal();
     }
 
+    // tslint:disable-next-line:use-life-cycle-interface
     ngOnDestroy() {
       this.httpAlive = false;
     }

@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { HttpService } from '../../../app-services/http.service';
+import { SocketService } from '../../../app-services/socket.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component ({
@@ -14,21 +16,34 @@ export class DataTableComponent implements OnInit {
 
     @ViewChild('defaultTab', {read: ElementRef}) defaultTab: ElementRef;
 
+    searchForm: FormGroup;
+
+    public activeMainTab = 'getIncomingDonation';
     public tabsArray = [];
     public tabidex = 'card-tab-1';
     public activeTab: string = 'default';
     private httpAlive = true;
 
-    constructor(private dialog: MatDialog, private httpService: HttpService) {}
+    constructor(private dialog: MatDialog, private httpService: HttpService, private fb: FormBuilder, private socketService: SocketService) {}
 
-    ngOnInit(): void {}
+    ngOnInit() {
+        this.initSearchForm();
+    }
+
+    initSearchForm() {
+        this.searchForm = this.fb.group({
+            search: ['',
+                Validators.required
+            ]
+        });
+    }
 
     openDetailedtIncomingDonation(hash) {
       this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonation/${hash}`)
         .takeWhile(() => this.httpAlive)
         .subscribe(
           response => {
-            let newData = response.data;
+            let newData = response;
             newData['type'] = 'donation';
             this.addToTabs(newData);
           },
@@ -42,7 +57,7 @@ export class DataTableComponent implements OnInit {
         .takeWhile(() => this.httpAlive)
         .subscribe(
           response => {
-            let newData = response.data;
+            let newData = response;
             newData['type'] = 'events';
             this.addToTabs(newData);
           },
@@ -84,10 +99,56 @@ export class DataTableComponent implements OnInit {
     setTabValue(value, tabid) {
       this.tabidex = tabid;
       this.activeTab = value;
+      this.searchForm.reset();
     }
 
     checkBoxChange(event) {
       event.stopPropagation();
+    }
+
+    submitSearchForm() {
+        const controls = this.searchForm.controls;
+        if (this.searchForm.invalid) {
+            Object.keys(controls)
+                .forEach(controlName => controls[controlName].markAsTouched());
+            return;
+        }
+        const body = {
+            'name': {
+                'include': this.searchForm.value['search']
+            }
+        };
+        this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/${this.activeMainTab}`, JSON.stringify(body))
+            .takeWhile(() => this.httpAlive)
+            .subscribe(
+            response => {
+                this.filterTable(response['_body']);
+            },
+            error => {
+                console.log(error);
+            });
+    }
+
+    filterTable(id) {
+        this.socketService.getData(id)
+        .takeWhile(() => this.httpAlive)
+        .subscribe(
+            response => {
+                if (response !== 'close' && response !== 'false') {
+                    if (this.activeMainTab === 'getIncomingDonation') {
+                        this.incomingDonationsData.unshift(JSON.parse(response))
+                    } else {
+                        this.charityEventsData.unshift(JSON.parse(response))
+                    }
+                }
+            },
+            error => {
+              console.log(error);
+            });
+    }
+
+    setActiveMainTab(value) {
+        this.activeMainTab = value;
     }
 
     // tslint:disable-next-line:use-life-cycle-interface

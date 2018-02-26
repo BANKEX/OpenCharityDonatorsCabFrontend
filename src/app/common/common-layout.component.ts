@@ -13,8 +13,6 @@ import 'rxjs/add/operator/takeWhile';
 export class CommonLayoutComponent implements OnInit {
 
     public userRole: string;
-    private httpAlive = true;
-
     public app: any;
     public headerThemes: any;
     public changeHeader: any;
@@ -22,6 +20,8 @@ export class CommonLayoutComponent implements OnInit {
     public changeSidenav: any;
     public headerSelected: any;
     public sidenavSelected: any;
+
+    private httpAlive = true;
 
     constructor(
       public userService: UserService,

@@ -27,11 +27,11 @@ contract('Organization', function(accounts) {
         OrganizationInstance = await Organization.new(OpenCharityTokenInstance.address, ADMIN_ACCOUNTS, 'Test Organization');
         await OpenCharityTokenInstance.setMintAgent(OrganizationInstance.address, true);
 
-        await OrganizationInstance.setIncomingDonation('Test Incoming Donation', INCOMING_DONATION_AMOUNT, 'Test note', {
+        await OrganizationInstance.setIncomingDonation('Test Incoming Donation', INCOMING_DONATION_AMOUNT, 'Test note', '0x3f', {
             from: ADMIN_ACCOUNTS[0]
         });
 
-        await OrganizationInstance.addCharityEvent('Test Charity Event', '100', '0', {
+        await OrganizationInstance.addCharityEvent('Test Charity Event', INCOMING_DONATION_AMOUNT+200, '0', '0x01', {
             from: ADMIN_ACCOUNTS[0]
         });
 
@@ -42,16 +42,10 @@ contract('Organization', function(accounts) {
     });
 
     it('should move tokens from donation to charity event contract', async () => {
-        console.log(`IncomingDonation address: ${IncomingDonationInstance.address}`);
-        console.log(`CharityEventInstance address: ${CharityEventInstance.address}`);
-
         try {
-
             await IncomingDonationInstance.moveToCharityEvent(CharityEventInstance.address, INCOMING_DONATION_AMOUNT, {
                 from: ADMIN_ACCOUNTS[0]
             });
-
-            console.log(`address: ${ADMIN_ACCOUNTS[0]}`);
 
             const incomingDonationBalance = await OpenCharityTokenInstance.balanceOf(IncomingDonationInstance.address);
             const eventBalance = await OpenCharityTokenInstance.balanceOf(CharityEventInstance.address);
@@ -62,6 +56,34 @@ contract('Organization', function(accounts) {
         } catch (e) {
             console.log(e);
         }
+    });
+
+    it('should not move tokens if charity event and incoming donation has no tags matches', async () => {
+
+        await OrganizationInstance.addCharityEvent('Test Charity Event With Unmatched Tags', INCOMING_DONATION_AMOUNT+200, '0', '0x55', {
+            from: ADMIN_ACCOUNTS[0]
+        });
+
+        const UnmatchedCharityEvent = CharityEvent.at(await getLastCharityEventAddress(OrganizationInstance));
+
+
+        try {
+            await IncomingDonationInstance.moveToCharityEvent(UnmatchedCharityEvent.address, INCOMING_DONATION_AMOUNT, {
+                from: ADMIN_ACCOUNTS[0]
+            });
+
+            const incomingDonationBalance = await OpenCharityTokenInstance.balanceOf(IncomingDonationInstance.address);
+            const eventBalance = await OpenCharityTokenInstance.balanceOf(CharityEventInstance.address);
+
+            assert(false, 'Move funds to charity event with unmatched tags');
+        } catch (e) {
+            const transactionException = e.message.search('Exception while processing transaction: revert') !== -1;
+            assert(transactionException, 'Move funds to charity event with unmatched tags');
+        }
+
+
+
+
     });
 
 

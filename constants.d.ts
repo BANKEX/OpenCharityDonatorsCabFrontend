@@ -23,3 +23,15 @@ export declare const MY_TEST_PLUGINS: any[];
 export declare const MY_TEST_RULES: any[];
 
 export declare const EXCLUDE_SOURCE_MAPS: any[];
+
+
+
+interface Environment {
+	networkId: number;
+	tokenAddress: string;
+	rpcProviderUrl: string;
+	websocketProviderUrl: string;
+	organizations: string[];
+}
+export declare const DEV_ENVIRONMENT: Environment;
+export declare const PROD_ENVIRONMENT: Environment;

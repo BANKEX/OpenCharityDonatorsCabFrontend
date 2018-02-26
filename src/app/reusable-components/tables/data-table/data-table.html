@@ -1,14 +1,22 @@
 <div class="container-fluid">
+    <!-- <div class="row">
+        <div class="col-md-4">
+            <form class="form-horizontal" [formGroup]="searchForm" (submit)="submitSearchForm()">
+                <input type="text" class="form-control" id="form-1-1" placeholder="Search" id="search" name="search" formControlName="search">
+                <button type="submit" class="btn btn-info mt-15px" [disabled]="!searchForm.valid">Search</button>
+            </form>
+        </div>
+    </div> -->
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="tab-info">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item pointer">
-                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-1'}" role="tab" data-toggle="tab" #defaultTab (click)="setTabValue('default','card-tab-1')">Пожервования</a>
+                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-1'}" role="tab" data-toggle="tab" #defaultTab (click)="setTabValue('default','card-tab-1'); setActiveMainTab('getIncomingDonation');">Пожервования</a>
                         </li>
                         <li class="nav-item pointer">
-                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-2'}" role="tab" data-toggle="tab" (click)="setTabValue('default','card-tab-2')">События</a>
+                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-2'}" role="tab" data-toggle="tab" (click)="setTabValue('default','card-tab-2'); setActiveMainTab('getCharityEvents');">События</a>
                         </li>
                         <li class="nav-item nav-item-tab pointer" *ngFor="let item of tabsArray">
                             <a *ngIf="item.type == 'donation'" class="nav-link" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.realWorldIdentifier}}</a>

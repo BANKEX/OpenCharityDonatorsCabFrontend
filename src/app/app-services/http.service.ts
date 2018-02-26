@@ -37,6 +37,17 @@ export class HttpService {
       .catch ((error: any) => Observable.throw(error.json() || 'Server error'));
   }
 
+  httpPostEx(url: string, data) {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    const options = new RequestOptions({headers: headers});
+    return this.http.post(url, data, options)
+      .map(respose => {
+        return respose;
+      })
+      .catch ((error: any) => Observable.throw(error.json() || 'Server error'));
+  }
+
   getUserData() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
