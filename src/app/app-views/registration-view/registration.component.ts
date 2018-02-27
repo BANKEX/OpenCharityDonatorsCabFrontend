@@ -12,110 +12,105 @@ import { UserService } from '../../app-services/user.service';
 
 
 @Component({
-    templateUrl: 'registration.component.html',
-    providers: [HttpService]
+	templateUrl: 'registration.component.html',
+	providers: [HttpService]
 })
 
 export class RegistrationComponent implements OnInit {
-    registrationForm: FormGroup;
+	registrationForm: FormGroup;
 
-    private httpAlive = true;
+	private httpAlive = true;
 
-    constructor(
-      private httpService: HttpService,
-      private fb: FormBuilder,
-      private dialog: MatDialog,
-      private router: Router,
-      private userService: UserService) {}
+	constructor(
+		private httpService: HttpService,
+		private fb: FormBuilder,
+		private dialog: MatDialog,
+		private router: Router,
+		private userService: UserService) {}
 
-    ngOnInit() {
-      this.initForm();
+	ngOnInit() {
+		this.initForm();
 
-      this.userService.removeUserDataLocal();
-    }
+		this.userService.removeUserDataLocal();
+	}
 
-    initForm() {
-      this.registrationForm = this.fb.group({
-       name: ['',
-        Validators.required
-      ],
-       surname: ['',
-       Validators.required
-      ],
-       email: ['', [
-        Validators.required,
-        Validators.email
-       ]
-      ],
-       pass: ['',
-       Validators.required
-      ],
-       reppass: ['',
-       Validators.required
-      ]
-      },
-      { validator: matchingFileds('pass', 'reppass')}
-      );
-     }
+	initForm() {
+		this.registrationForm = this.fb.group({
+			name: ['',
+				Validators.required
+			],
+			surname: ['',
+				Validators.required
+			],
+			email: ['', [
+				Validators.required,
+				Validators.email
+			]]
+		})
+	}
 
-     isControlInvalid(controlName: string): boolean {
-        const control = this.registrationForm.controls[controlName];
+	isControlInvalid(controlName: string): boolean {
+		const control = this.registrationForm.controls[controlName];
 
-        const result = control.invalid && control.touched;
+		const result = control.invalid && control.touched;
 
-       return result;
-      }
+		return result;
+	}
 
-     registrationSubmit() {
-      const controls = this.registrationForm.controls;
-       if (this.registrationForm.invalid) {
-        Object.keys(controls)
-         .forEach(controlName => controls[controlName].markAsTouched());
-         return;
-        }
-        const data = {
-          'email': this.registrationForm.value['email'],
-          'firstName': this.registrationForm.value['name'],
-          'lastName': this.registrationForm.value['surname'],
-          'password': this.registrationForm.value['pass']
-        };
-        this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/signup`, JSON.stringify(data))
-            .takeWhile(() => this.httpAlive)
-            .subscribe(
-              response => {
-                this.registrationForm.reset();
-                this.openRegSuccessModal();
-              },
-              error => {
-                this.openRegErrorModal();
-              });
-      }
+	registrationSubmit() {
+		const controls = this.registrationForm.controls;
+		if (this.registrationForm.invalid) {
+			Object.keys(controls)
+				.forEach(controlName => controls[controlName].markAsTouched());
+			return;
+		}
+		const data = {
+			'email': this.registrationForm.value['email'],
+			'firstName': this.registrationForm.value['name'],
+			'lastName': this.registrationForm.value['surname']
+		};
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/user/signup`, JSON.stringify(data))
+			.takeWhile(() => this.httpAlive)
+			.subscribe(
+				response => {
+				if (response['_body'] === 'Ok') {
+					this.registrationForm.reset();
+					this.openRegSuccessModal();
+				} else {
+					this.openRegErrorModal();
+				}
+			},
+			error => {
+				this.openRegErrorModal();
+			});
+	}
 
-      openRegSuccessModal() {
-        const dialogRef = this.dialog.open(
-          AlertModalComponent, {data: {title: 'Registration success!', content: 'You successfully created account!', closeLabel: 'Login'}}
-        );
-        dialogRef.afterClosed()
-          .takeWhile(() => this.httpAlive)
-          .subscribe(result => {
-            if (result === false) {
-              this.router.navigate(['/login']);
-            }
-          });
-      }
+	openRegSuccessModal() {
+	const dialogRef = this.dialog.open(
+		AlertModalComponent, {data: {title: 'Registration success!', content: 'You successfully created account!', closeLabel: 'Login'}}
+	);
+	dialogRef.afterClosed()
+		.takeWhile(() => this.httpAlive)
+		.subscribe(result => {
+			if (result === false) {
+				this.router.navigate(['/login']);
+			}
+		});
+	}
 
-      openRegErrorModal() {
-        const dialogRef = this.dialog.open(
-          AlertModalComponent,
-          {data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
-        );
-        dialogRef.afterClosed()
-          .takeWhile(() => this.httpAlive)
-          .subscribe(result => {});
-      }
+	openRegErrorModal() {
+	const dialogRef = this.dialog.open(
+		AlertModalComponent,
+		{data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
+	);
+	dialogRef.afterClosed()
+		.takeWhile(() => this.httpAlive)
+		.subscribe(result => {});
+	}
 
-      ngOnDestroy() {
-        this.httpAlive = false;
-      }
+	// tslint:disable-next-line:use-life-cycle-interface
+	ngOnDestroy() {
+		this.httpAlive = false;
+	}
 
 }

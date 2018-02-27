@@ -4,46 +4,53 @@ import { HttpService } from '../../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component({
-  templateUrl: './forgot-pass-modal.html',
-  styleUrls: ['./forgot-pass-modal.scss'],
-  providers: [HttpService]
+	templateUrl: './forgot-pass-modal.html',
+	styleUrls: ['./forgot-pass-modal.scss'],
+	providers: [HttpService]
 })
 export class ForgotPassModalComponent {
 
-  public emailModel = '';
+	public emailModel = '';
 
-  private httpAlive: boolean = true;
+	private httpAlive: boolean = true;
 
-  constructor (private httpService: HttpService, private thisDialogRef: MatDialogRef<ForgotPassModalComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
+	constructor (
+		private httpService: HttpService,
+		private thisDialogRef: MatDialogRef<ForgotPassModalComponent>,
+		@Inject(MAT_DIALOG_DATA) public data) {}
 
 
-  ngOnDestroy() {
-    this.httpAlive = false;
-  }
+	ngOnDestroy() {
+		this.httpAlive = false;
+	}
 
-  onCloseSuccess() {
-    this.thisDialogRef.close(true);
-  }
+	onCloseSuccess() {
+		this.thisDialogRef.close(true);
+	}
 
-  onCloseCancel() {
-    this.thisDialogRef.close(false);
-  }
+	onCloseCancel() {
+		this.thisDialogRef.close(false);
+	}
 
-  passFormSubmit() {
-    const data = {
-      'email': this.emailModel
-    }
-      this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/forgot`, JSON.stringify(data))
-        .takeWhile(() => this.httpAlive)
-        .subscribe(
-          response => {
-            console.log(response);
-            this.emailModel = '';
-            this.thisDialogRef.close('success');
-          },
-          error => {
-            this.thisDialogRef.close('error');
-          });
-    }
+	passFormSubmit() {
+		const data = {
+			'email': this.emailModel
+		}
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/user/forgot`, JSON.stringify(data))
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				if (response['_body'] === 'Ok') {
+					this.emailModel = '';
+					this.thisDialogRef.close('success');
+				} else {
+					this.emailModel = '';
+					this.thisDialogRef.close('error');
+				}
+			},
+			error => {
+				this.thisDialogRef.close('error');
+			});
+	}
 
 }

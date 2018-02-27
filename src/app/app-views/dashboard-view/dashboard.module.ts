@@ -7,21 +7,25 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { SearchPipe } from '../../app-pipes/search/search.pipe';
+
+
 // Dashboard Component
 import { DashboardComponent } from './dashboard.component';
 import { DataTableComponent } from '../../reusable-components/tables/data-table/data-table.component';
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(DashboardRoutes),
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule
-    ],
-    declarations: [
-        DashboardComponent,
-        DataTableComponent,
-    ],
-    providers: []
+	imports: [
+		RouterModule.forChild(DashboardRoutes),
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule
+	],
+	declarations: [
+		DashboardComponent,
+		DataTableComponent,
+		SearchPipe
+	],
+	providers: []
 })
 export class DashboardModule { }
