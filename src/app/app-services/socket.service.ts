@@ -10,7 +10,7 @@ export class SocketService {
 	private socket;
 
 	constructor() {
-		this.socket = io(AppConfig.API_URL, {path: `/api/ws`});
+		this.socket = io({path: `/api/ws`});
 	}
 
 	public getData = (data) => {
