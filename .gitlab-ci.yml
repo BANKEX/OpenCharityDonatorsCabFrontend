@@ -1,97 +1,56 @@
 variables:
-  IMAGE: bankexlabs/$CI_PROJECT_NAME
+  IMAGE: bankexlabs/$CI_PROJECT_NAME:release
 
 stages:
-  - build-node-stage
-  - build-node-prod
-  - tests
-  - release-nginx-stage
-  - release-nginx-prod
+  - setup
+  - build
+  - release
   - deploy-stage
   - deploy-prod
 
-build-node-stage:
-  image: node:alpine
-  stage: build-node-stage
-  before_script:
-    - apk add --update git
-    - apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
-    - npm install --quiet node-gyp -g
-    - npm install
-    - npm rebuild bcrypt --build-from-source
-    - npm rebuild node-sass
-  cache:
-    paths:
-      - node_modules/
-  script:
-    - npm run build:aot:dev
-  artifacts:
-    paths:
-      - dist
-    expire_in: 1h
+cache:
+  paths:
+    - node_modules/
 
-build-node-prod:
+setup:
   image: node:alpine
-  stage: build-node-prod
-  before_script:
+  stage: setup
+  script:
     - apk add --update git
     - apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
     - npm install --quiet node-gyp -g
     - npm install
     - npm rebuild bcrypt --build-from-source
     - npm rebuild node-sass
-  cache:
-    paths:
-      - node_modules/
+
+build:
+  image: node:alpine
+  stage: build
   script:
     - npm run build:aot:prod
   artifacts:
     paths:
       - dist
-    expire_in: 1h
-  only:
-    - production
-    
-tests:
-  image: alpine
-  stage: tests
-  script:
-    - echo "Tests OK"
+    expire_in: 24h
 
-release-nginx-stage:
+release:
   image: docker:latest
-  stage: release-nginx-stage
+  stage: release
   before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
   script:
-    - docker build -f docker/Dockerfile -t ${IMAGE}:stage .
-    - docker push ${IMAGE}:stage
-  dependencies: 
-    - build-node-stage
+    - docker build -f docker/Dockerfile -t ${IMAGE} .
+    - docker push ${IMAGE}
 
-release-nginx-prod:
-  image: docker:latest
-  stage: release-nginx-prod
-  before_script:
-    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
-  script:
-    - docker build -f docker/Dockerfile -t ${IMAGE}:prod .
-    - docker push ${IMAGE}:prod
-  dependencies: 
-    - build-node-prod
-  only:
-    - production
-    
-deploy_stage:
+deploy-stage:
   stage: deploy-stage
   image: tmaier/docker-compose
   variables:
     DOCKER_HOST: "tcp://charity-staging-do.bankex.team:2376"
     DOCKER_TLS_VERIFY: "1"
-    SERVERNAME: opencharity.staging.bankex.team
+    SERVERNAME: donatorscab.staging.bankex.team
     EMAIL: "om@bankexfoundation.org"
     DOCKER_CERT_PATH: "/certs"
-    IMAGE: bankexlabs/$CI_PROJECT_NAME:stage
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
     - echo "$DO_DOCKER_CA_STAGE" > $DOCKER_CERT_PATH/ca.pem
@@ -103,23 +62,21 @@ deploy_stage:
     - docker-compose -f docker/docker-compose.yml down
     - docker rmi $IMAGE || echo "image not exist"
     - docker pull $IMAGE
-    - sleep 15
     - docker-compose -f docker/docker-compose.yml up -d
   environment:
     name: staging
-    url: https://opencharity.staging.bankex.team
+    url: https://donatorscab.staging.bankex.team
   when: manual
 
-deploy_prod:
+deploy-prod:
   stage: deploy-prod
   image: tmaier/docker-compose
   variables:
     DOCKER_HOST: "tcp://charity-prod-do.bankex.team:2376"
     DOCKER_TLS_VERIFY: "1"
-    SERVERNAME: opencharity.bankex.team
+    SERVERNAME: donatorscab.bankex.team
     EMAIL: "om@bankexfoundation.org"
     DOCKER_CERT_PATH: "/certs"
-    IMAGE: bankexlabs/$CI_PROJECT_NAME:prod
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
     - echo "$DO_DOCKER_CA_PROD" > $DOCKER_CERT_PATH/ca.pem
@@ -131,11 +88,10 @@ deploy_prod:
     - docker-compose -f docker/docker-compose.yml down
     - docker rmi $IMAGE || echo "image not exist"
     - docker pull $IMAGE
-    - sleep 15
     - docker-compose -f docker/docker-compose.yml up -d
   environment:
     name: prod
-    url: https://opencharity.bankex.team
+    url: https://donatorscab.bankex.team
   when: manual
   only:
     - production
