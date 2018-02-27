@@ -46,7 +46,7 @@ export class RegistrationComponent implements OnInit {
 				Validators.required,
 				Validators.email
 			]]
-		})
+		});
 	}
 
 	isControlInvalid(controlName: string): boolean {

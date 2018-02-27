@@ -20,6 +20,7 @@ export class ForgotPassModalComponent {
 		@Inject(MAT_DIALOG_DATA) public data) {}
 
 
+	// tslint:disable-next-line:use-life-cycle-interface
 	ngOnDestroy() {
 		this.httpAlive = false;
 	}
@@ -35,7 +36,7 @@ export class ForgotPassModalComponent {
 	passFormSubmit() {
 		const data = {
 			'email': this.emailModel
-		}
+		};
 		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/user/forgot`, JSON.stringify(data))
 		.takeWhile(() => this.httpAlive)
 		.subscribe(

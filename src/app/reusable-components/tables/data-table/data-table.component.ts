@@ -51,7 +51,7 @@ export class DataTableComponent implements OnInit {
 				this.addToTabs(newData);
 			},
 			error => {
-			    console.log(error);
+				console.log(error);
 			});
 	}
 
@@ -66,7 +66,7 @@ export class DataTableComponent implements OnInit {
 				this.addToTabs(newData);
 			},
 			error => {
-			    console.log(error);
+				console.log(error);
 			});
 	}
 

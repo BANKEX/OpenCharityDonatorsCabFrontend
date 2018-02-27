@@ -21,7 +21,7 @@ export class SocketService {
 			return () => {
 				this.socket.disconnect();
 			};
-		})
+		});
 		return observable;
 	}
 
