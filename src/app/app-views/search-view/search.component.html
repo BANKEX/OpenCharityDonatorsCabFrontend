@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-overflow">
+                <table class="table table-lg table-hover">
+                    <tbody>
+                        <tr *ngFor="let item of searchListData" class="cursor-p">
+                            <td>
+                                <div class="mrg-top-15">
+                                    <b class="text-info font-size-16">{{item.name}}</b>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="searchListData.length == 0" class="table-no-item">
+                    <span>No items found</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

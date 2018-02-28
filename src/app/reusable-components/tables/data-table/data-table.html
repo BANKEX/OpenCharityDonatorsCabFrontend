@@ -1,13 +1,5 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4">
-            <form class="form-horizontal d-f ai-fs" [formGroup]="searchForm" (submit)="submitSearchForm()">
-                <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Search" id="search" name="search" formControlName="search" [(ngModel)]="searchModel">
-                <!-- <button type="submit" class="btn btn-info mrg-left-15" [disabled]="!searchForm.valid">Search</button> -->
-            </form>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="tab-info">
@@ -18,10 +10,10 @@
                         <li class="nav-item pointer">
                             <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-2'}" role="tab" data-toggle="tab" #defaultTabEvents (click)="setTabValue('default','card-tab-2'); setActiveMainTab('getCharityEvents');">События</a>
                         </li>
-                        <li class="nav-item nav-item-tab pointer" *ngFor="let item of tabsArray">
-                            <a *ngIf="item.type == 'donation'" class="nav-link" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.realWorldIdentifier}}</a>
-                            <a *ngIf="item.type == 'events'" class="nav-link" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.name}}</a>
-                            <div class="ei ei-unchecked" (click)="removeFromTabs(item.address);"></div>
+                        <li class="nav-item nav-item-tab pointer position-rel" *ngFor="let item of tabsArray">
+                            <a *ngIf="item.type == 'donation'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.realWorldIdentifier}}</a>
+                            <a *ngIf="item.type == 'events'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.name}}</a>
+                            <div class="ei ei-unchecked tab-close" (click)="removeFromTabs(item.address);"></div>
                         </li>
                     </ul>
                 </div>
@@ -39,10 +31,39 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of incomingDonationsData | SearchFilter: searchModel" (click)="openDetailedtIncomingDonation(item.address, 'incomingDonation')" class="cursor-p">
+                                    <tr *ngFor="let item of incomingDonationsFavorites" (click)="openDetailedtIncomingDonation(item.address, 'incomingDonation')" class="cursor-p">
                                         <td>
-                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)">
-                                                <input id="task10_{{item.address}}" name="task10" type="checkbox">
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)" *ngIf="userRole === 'USER'">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox" (change)="addToFavorites(item)" [checked]="favoritesArr.indexOf(item.address) > -1">
+                                                <label for="task10_{{item.address}}"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="relative mrg-top-15">
+                                                <span class="status online"> </span>
+                                                <span class="pdd-left-20">{{item.realWorldIdentifier}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-dark font-size-16">${{item.amount}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.note}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <span>{{item.date}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let item of incomingDonations" (click)="openDetailedtIncomingDonation(item.address, 'incomingDonation')" class="cursor-p">
+                                        <td>
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)" *ngIf="userRole === 'USER'">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox" (change)="addToFavorites(item)" [checked]="favoritesArr.indexOf(item.address) > -1">
                                                 <label for="task10_{{item.address}}"></label>
                                             </div>
                                         </td>
@@ -70,6 +91,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div *ngIf="incomingDonations.length == 0" class="table-no-item">
+                                <span>No items</span>
+                            </div>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" [ngClass]="{'active':tabidex === 'card-tab-2'}">
@@ -86,10 +110,44 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of charityEventsData | SearchFilter: searchModel" (click)="openDetailedtCharityEvent(item.address, 'charityEven')" class="cursor-p">
+                                    <tr *ngFor="let item of charityEventsFavorites" (click)="openDetailedtCharityEvent(item.address, 'charityEven')" class="cursor-p">
                                         <td>
-                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)">
-                                                <input id="task10_{{item.address}}" name="task10" type="checkbox">
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)" *ngIf="userRole === 'USER'">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox" (change)="addToFavorites(item)" [checked]="favoritesArr.indexOf(item.address) > -1">
+                                                <label for="task10_{{item.address}}"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="relative mrg-top-15">
+                                                <span class="status online"> </span>
+                                                <span class="pdd-left-20">{{item.name}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-dark font-size-16">${{item.payed}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.raised}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.target}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <span>{{item.date}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let item of charityEvents" (click)="openDetailedtCharityEvent(item.address, 'charityEven')" class="cursor-p">
+                                        <td>
+                                            <div class="checkbox checkbox-star mrg-left-20" (click)="checkBoxChange($event)" *ngIf="userRole === 'USER'">
+                                                <input id="task10_{{item.address}}" name="task10" type="checkbox" (change)="addToFavorites(item)" [checked]="favoritesArr.indexOf(item.address) > -1">
                                                 <label for="task10_{{item.address}}"></label>
                                             </div>
                                         </td>
@@ -122,7 +180,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div *ngIf="charityEventsData.length == 0" class="table-no-item">
+                            <div *ngIf="charityEvents.length == 0" class="table-no-item">
                                 <span>No items</span>
                             </div>
                         </div>
@@ -131,7 +189,7 @@
                     <!-- Repeat tabs start -->
                     <div role="tabpanel" class="tab-pane" *ngFor="let item of tabsArray" [ngClass]="{'active':tabidex === item.address}">
                         <div class="table-overflow" *ngIf="item.type == 'donation'">
-                            <div class="card card-body">
+                            <div class="card card-body border-radius-0">
                                 <p><b>Address:</b>{{item.address}}</p>
                                 <p><b>Amount:</b> {{item.amount}}</p>
                                 <p><b>Date:</b> {{item.date}}</p>
@@ -141,7 +199,7 @@
                             </div>
                         </div>
                         <div class="table-overflow" *ngIf="item.type == 'events'">
-                            <div class="card card-body">
+                            <div class="card card-body border-radius-0">
                                 <p><b>Address:</b>{{item.address}}</p>
                                 <p><b>Name:</b> {{item.name}}</p>
                                 <p><b>Payed:</b> {{item.payed}}</p>

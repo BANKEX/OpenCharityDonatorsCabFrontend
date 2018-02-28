@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../app-services/user.service';
 import { HttpService } from '../app-services/http.service';
 import 'rxjs/add/operator/takeWhile';
@@ -11,6 +12,8 @@ import 'rxjs/add/operator/takeWhile';
 })
 
 export class CommonLayoutComponent implements OnInit {
+
+    searchForm: FormGroup;
 
     public userRole: string;
     public app: any;
@@ -26,7 +29,8 @@ export class CommonLayoutComponent implements OnInit {
     constructor(
       public userService: UserService,
       public httpService: HttpService,
-      private router: Router
+      private router: Router,
+      private fb: FormBuilder
     ) {
         this.app = {
             layout: {
@@ -56,7 +60,17 @@ export class CommonLayoutComponent implements OnInit {
 
     ngOnInit() {
       this.userRole = this.userService.userData['userRole'];
+
+      this.initSearchForm();
     }
+
+    initSearchForm() {
+		this.searchForm = this.fb.group({
+			search: ['',
+				Validators.required
+			]
+		});
+	}
 
     logOut() {
       this.httpService.logOutUser(`${this.httpService.baseAPIurl}/api/user/logout`)
@@ -69,5 +83,15 @@ export class CommonLayoutComponent implements OnInit {
             this.router.navigate(['/login']);
           });
     }
+
+    submitSearchForm() {
+		const controls = this.searchForm.controls;
+		if (this.searchForm.invalid) {
+			Object.keys(controls)
+				.forEach(controlName => controls[controlName].markAsTouched());
+			return;
+        }
+        this.router.navigate(['/search', this.searchForm.value['search']]);
+	}
 
 }

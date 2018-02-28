@@ -26,6 +26,10 @@ export const appRoutes: Routes = [
             {
                 path: 'dashboard/:id',
                 loadChildren: './app-views/dashboard-view/dashboard.module#DashboardModule'
+            },
+            {
+                path: 'search/:searchValue',
+                loadChildren: './app-views/search-view/search.module#SearchModule'
             }
         ]
     },

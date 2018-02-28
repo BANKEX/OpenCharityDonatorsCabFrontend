@@ -10,11 +10,11 @@ export class AlertModalComponent {
   constructor (private thisDialogRef: MatDialogRef<AlertModalComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
   onCloseSuccess() {
-    this.thisDialogRef.close(true);
+	this.thisDialogRef.close(true);
   }
 
   onCloseCancel() {
-    this.thisDialogRef.close(false);
+	this.thisDialogRef.close(false);
   }
 
 }

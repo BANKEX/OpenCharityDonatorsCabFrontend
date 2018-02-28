@@ -5,8 +5,6 @@ import { DashboardRoutes } from './dashboard-routing.module';
 
 import { CommonModule } from '@angular/common';
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { SearchPipe } from '../../app-pipes/search/search.pipe';
 
 
@@ -17,9 +15,7 @@ import { DataTableComponent } from '../../reusable-components/tables/data-table/
 @NgModule({
 	imports: [
 		RouterModule.forChild(DashboardRoutes),
-		CommonModule,
-		FormsModule,
-		ReactiveFormsModule
+		CommonModule
 	],
 	declarations: [
 		DashboardComponent,

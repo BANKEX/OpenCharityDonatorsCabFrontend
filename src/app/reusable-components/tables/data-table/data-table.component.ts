@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { HttpService } from '../../../app-services/http.service';
 import { SocketService } from '../../../app-services/socket.service';
+import { UserService } from '../../../app-services/user.service';
 import 'rxjs/add/operator/takeWhile';
 
 @Component ({
@@ -11,33 +11,111 @@ import 'rxjs/add/operator/takeWhile';
 	templateUrl: 'data-table.html'
 })
 export class DataTableComponent implements OnInit {
-	@Input() incomingDonationsData;
-	@Input() charityEventsData;
+
+	@Input() organizationId;
 
 	@ViewChild('defaultTab', {read: ElementRef}) defaultTab: ElementRef;
 	@ViewChild('defaultTabEvents', {read: ElementRef}) defaultTabEvents: ElementRef;
 
-	searchForm: FormGroup;
+	public incomingDonations = [];
+	public charityEvents = [];
 
-	public searchModel = '';
+	public incomingDonationsFavorites = [];
+	public charityEventsFavorites = [];
+
+    public userRole: string;
+
+	public favoritesArr = [];
 	public activeMainTab = 'getIncomingDonation';
 	public tabsArray = [];
 	public tabidex = 'card-tab-1';
-	public activeTab: string = 'default';
-	private httpAlive = true;
+    public activeTab: string = 'default';
 
-	constructor(private dialog: MatDialog, private httpService: HttpService, private fb: FormBuilder, private socketService: SocketService) {}
+    private httpAlive = true;
+    private userData = {};
+
+	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService) {}
 
 	ngOnInit() {
-		this.initSearchForm();
+        this.userRole = this.userService.userData['userRole'];
+		this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
 	}
 
-	initSearchForm() {
-		this.searchForm = this.fb.group({
-			search: ['',
-				Validators.required
-			]
-		});
+	getUserFavorites(url) {
+		this.httpService.httpGet(url)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				this.favoritesArr = response.data.trans;
+				this.userData = response.data;
+				this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+		        this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+			},
+			error => {
+				console.log(error);
+				this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+		        this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+			});
+	}
+
+	getIncomingDonations(url) {
+		this.httpService.getSocketData(url)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				this.getIncomingDonationsSockets(response['_body']);
+			},
+			error => {
+				console.log(error);
+			});
+	}
+
+	getIncomingDonationsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				if (response !== 'close') {
+					if (this.favoritesArr.indexOf(JSON.parse(response).address) > -1) {
+						this.incomingDonationsFavorites.unshift(JSON.parse(response));
+					} else {
+						this.incomingDonations.unshift(JSON.parse(response));
+					}
+				}
+			},
+			error => {
+				console.log(error);
+			});
+	}
+
+	getCharityEvents(url) {
+		this.httpService.getSocketData(url)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				this.getCharityEventsSockets(response['_body']);
+			},
+			error => {
+				console.log(error);
+			});
+	}
+
+	getCharityEventsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				if (response !== 'close') {
+					if (this.favoritesArr.indexOf(JSON.parse(response).address) > -1) {
+						this.charityEventsFavorites.unshift(JSON.parse(response));
+					} else {
+						this.charityEvents.unshift(JSON.parse(response));
+					}
+				}
+			},
+			error => {
+				console.log(error);
+			});
 	}
 
 	openDetailedtIncomingDonation(hash, tab) {
@@ -110,61 +188,35 @@ export class DataTableComponent implements OnInit {
 	setTabValue(value, tabid) {
 		this.tabidex = tabid;
 		this.activeTab = value;
-		this.searchForm.reset();
 	}
 
 	checkBoxChange(event) {
 		event.stopPropagation();
 	}
 
-	submitSearchForm() {
-		const controls = this.searchForm.controls;
-		if (this.searchForm.invalid) {
-			Object.keys(controls)
-				.forEach(controlName => controls[controlName].markAsTouched());
-			return;
+	addToFavorites(data) {
+		if (this.favoritesArr.indexOf(data.address) > -1) {
+			this.favoritesArr.splice(this.favoritesArr.indexOf(data.address), 1);
+		} else {
+			this.favoritesArr.push(data.address);
 		}
-		const body = {
-			'name': {
-				'include': this.searchForm.value['search']
-			}
-		};
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/${this.activeMainTab}`, JSON.stringify(body))
-			.takeWhile(() => this.httpAlive)
-			.subscribe(
-			response => {
-				this.filterTable(response['_body']);
-			},
-			error => {
-				console.log(error);
-			});
-	}
 
-	filterTable(id) {
-		this.clearTab();
-		this.socketService.getData(id)
+		const sendData = {
+			'firstName': this.userData['firstName'],
+			'lastName': this.userData['lastName'],
+			'tags': this.userData['tags'],
+			'trans': this.favoritesArr
+		}
+
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/change/`, JSON.stringify(sendData))
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				if (response !== 'close' && response !== 'false') {
-					if (this.activeMainTab === 'getIncomingDonation') {
-						this.incomingDonationsData.unshift(JSON.parse(response));
-					} else {
-						this.charityEventsData.unshift(JSON.parse(response));
-					}
-				}
+				console.log(response);
 			},
 			error => {
 				console.log(error);
 			});
-	}
-
-	clearTab() {
-		if (this.activeMainTab === 'getIncomingDonation') {
-			this.incomingDonationsData = [];
-		} else {
-			this.charityEventsData = [];
-		}
 	}
 
 	setActiveMainTab(value) {
