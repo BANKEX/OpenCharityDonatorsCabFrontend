@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="page-title">
-        <h4>Account Setting</h4>
+        <h4>Настройки аккаунта</h4>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -8,43 +8,43 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-heading border bottom">
-                            <h4 class="card-title">General Info</h4>
+                            <h4 class="card-title">Основная информация</h4>
                         </div>
                         <div class="card-block">
                             <form [formGroup]="userForm" (submit)="userSubmit()">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>Email</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Эл. адрес</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="email" formControlName="email">
-                                        <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
+                                        <span *ngIf="isControlInvalid('email')" class="error-label">Обязательно для заполнения!</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>First name</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Имя</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="firstName" formControlName="firstName">
-                                        <span *ngIf="isControlInvalid('firstName')" class="error-label">Field is required!</span>
+                                        <span *ngIf="isControlInvalid('firstName')" class="error-label">Обязательно для заполнения!</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>Last name</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Фамилия</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="lastName" formControlName="lastName">
-                                        <span *ngIf="isControlInvalid('lastName')" class="error-label">Field is required!</span>
+                                        <span *ngIf="isControlInvalid('lastName')" class="error-label">Обязательно для заполнения!</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>Password</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Пароль</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" id="pass" formControlName="pass">
@@ -53,7 +53,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>Repeat Password</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Повторите пароль</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" id="reppass" formControlName="reppass">
@@ -63,7 +63,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>New Password</b></p>
+                                        <p class="mrg-top-10 text-dark"> <b>Новый пароль</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" id="newpass" formControlName="newpass">
@@ -81,8 +81,8 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button (click)="undisabledInputs()" class="btn btn-info mt-15px pull-right" *ngIf="inputDisabled">Edit</button>
-                                        <button type="submit" class="btn btn-info mt-15px pull-right" [disabled]="!userForm.valid" *ngIf="!inputDisabled">Update</button>
+                                        <button (click)="undisabledInputs()" class="btn btn-info mt-15px pull-right" *ngIf="inputDisabled">Изменить</button>
+                                        <button type="submit" class="btn btn-info mt-15px pull-right" [disabled]="!userForm.valid" *ngIf="!inputDisabled">Обновить</button>
                                     </div>
                                 </div>
                             </form>

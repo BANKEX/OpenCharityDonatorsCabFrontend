@@ -15,29 +15,29 @@
                         <div class="vertical-align full-height pdd-horizon-70">
                             <div class="table-cell">
                                 <div class="pdd-horizon-15">
-                                    <h2>Login</h2>
-                                    <p class="mrg-btm-15 font-size-13">Please enter your user name and password to login</p>
+                                    <h2>Вход</h2>
+                                    <p class="mrg-btm-15 font-size-13">Пожалуйста, введите ваш логин и пароль, чтобы войти</p>
                                     <form [formGroup]="loginForm" (submit)="loginFormSubmit()">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="User email" id="email" formControlName="email">
-                                            <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
+                                            <input type="email" class="form-control" placeholder="Эл. адрес пользователя" id="email" formControlName="email">
+                                            <span *ngIf="isControlInvalid('email')" class="error-label">Обязательно для заполнения!</span>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password" id="pass" formControlName="pass">
-                                            <span *ngIf="isControlInvalid('pass')" class="error-label">Field is required!</span>
+                                            <input type="password" class="form-control" placeholder="Пароль" id="pass" formControlName="pass">
+                                            <span *ngIf="isControlInvalid('pass')" class="error-label">Обязательно для заполнения!</span>
                                         </div>
                                         <div class="checkbox font-size-13 inline-block no-mrg-vertical no-pdd-vertical"></div>
                                         <div class="pull-right mt-3px">
-                                            <a (click)="openForgotPassModal()" style="color: #0f9aee; cursor: pointer;">Forgot Password?</a>
+                                            <a (click)="openForgotPassModal()" style="color: #0f9aee; cursor: pointer;">Забыли пароль?</a>
                                         </div>
-                                        <button type="submit" class="btn btn-info mt-15px" [disabled]="!loginForm.valid">Login</button>
+                                        <button type="submit" class="btn btn-info mt-15px" [disabled]="!loginForm.valid">Вход</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                         <div class="login-footer">
                             <img class="img-responsive inline-block" src="assets/images/logo/logo.png" width="100" alt="">
-                            <span class="font-size-13 pull-right pdd-top-5">Don't have an account? <a routerLink="/registration">Sign Up Now</a></span>
+                            <span class="font-size-13 pull-right pdd-top-5">У вас нет учетной записи? <a routerLink="/registration">Зарегистрируйтесь сейчас</a></span>
                         </div>
                     </div>
                 </div>

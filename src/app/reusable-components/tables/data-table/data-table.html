@@ -189,7 +189,7 @@
                     <!-- Repeat tabs start -->
                     <div role="tabpanel" class="tab-pane" *ngFor="let item of tabsArray" [ngClass]="{'active':tabidex === item.address}">
                         <div class="table-overflow" *ngIf="item.type == 'donation'">
-                            <div class="card card-body border-radius-0">
+                            <div class="card card-body no-border">
                                 <p><b>Address:</b>{{item.address}}</p>
                                 <p><b>Amount:</b> {{item.amount}}</p>
                                 <p><b>Date:</b> {{item.date}}</p>
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                         <div class="table-overflow" *ngIf="item.type == 'events'">
-                            <div class="card card-body border-radius-0">
+                            <div class="card card-body no-border">
                                 <p><b>Address:</b>{{item.address}}</p>
                                 <p><b>Name:</b> {{item.name}}</p>
                                 <p><b>Payed:</b> {{item.payed}}</p>

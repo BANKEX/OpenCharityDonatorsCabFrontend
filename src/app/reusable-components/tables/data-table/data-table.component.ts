@@ -32,13 +32,26 @@ export class DataTableComponent implements OnInit {
     public activeTab: string = 'default';
 
     private httpAlive = true;
-    private userData = {};
+	private userData = {};
+
+	private incomingDonationsAlive = true;
+	private charityEventsAlive = true;
 
 	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService) {}
 
 	ngOnInit() {
         this.userRole = this.userService.userData['userRole'];
-		this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
+		this.initView();
+	}
+
+	initView() {
+		if (this.userService.userData['userRole'] === 'USER') {
+			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
+		}
+		else {
+			this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+		    this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+		}
 	}
 
 	getUserFavorites(url) {
@@ -53,8 +66,6 @@ export class DataTableComponent implements OnInit {
 			},
 			error => {
 				console.log(error);
-				this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
-		        this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
 			});
 	}
 
@@ -72,20 +83,33 @@ export class DataTableComponent implements OnInit {
 
 	getIncomingDonationsSockets(id) {
 		this.socketService.getData(id)
-		.takeWhile(() => this.httpAlive)
-		.subscribe(
-			response => {
-				if (response !== 'close') {
-					if (this.favoritesArr.indexOf(JSON.parse(response).address) > -1) {
-						this.incomingDonationsFavorites.unshift(JSON.parse(response));
-					} else {
-						this.incomingDonations.unshift(JSON.parse(response));
-					}
+		.takeWhile(() => this.incomingDonationsAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.incomingDonationsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.incomingDonations.unshift(JSON.parse(data));
 				}
-			},
-			error => {
-				console.log(error);
-			});
+			} else {
+				this.incomingDonationsAlive = false;
+				this.listemIncomingDonationsSockets('newIncomingDonation');
+			}
+		});
+	}
+
+	listemIncomingDonationsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.incomingDonationsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.incomingDonations.unshift(JSON.parse(data));
+				}
+			}
+		});
 	}
 
 	getCharityEvents(url) {
@@ -102,20 +126,33 @@ export class DataTableComponent implements OnInit {
 
 	getCharityEventsSockets(id) {
 		this.socketService.getData(id)
-		.takeWhile(() => this.httpAlive)
-		.subscribe(
-			response => {
-				if (response !== 'close') {
-					if (this.favoritesArr.indexOf(JSON.parse(response).address) > -1) {
-						this.charityEventsFavorites.unshift(JSON.parse(response));
-					} else {
-						this.charityEvents.unshift(JSON.parse(response));
-					}
+		.takeWhile(() => this.charityEventsAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.charityEventsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.charityEvents.unshift(JSON.parse(data));
 				}
-			},
-			error => {
-				console.log(error);
-			});
+			} else {
+				this.charityEventsAlive = false;
+				this.listemCharityEventsSockets('newCharityEvent');
+			}
+		});
+	}
+
+	listemCharityEventsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.charityEventsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.charityEvents.unshift(JSON.parse(data));
+				}
+			}
+		});
 	}
 
 	openDetailedtIncomingDonation(hash, tab) {
@@ -212,7 +249,6 @@ export class DataTableComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				console.log(response);
 			},
 			error => {
 				console.log(error);

@@ -27,7 +27,7 @@
                                 <span class="icon-holder">
                                     <i class="ti-home"></i>
                                 </span>
-                                <span class="title">Dashboard</span>
+                                <span class="title">Организации</span>
                             </a>
                         </li>
                         <li clas="nav-item" routerLinkActive="active" *ngIf="userRole == 'USER'">
@@ -35,7 +35,7 @@
                                 <span class="icon-holder">
                                     <i class="ei-star-1"></i>
                                 </span>
-                                <span class="title">Account</span>
+                                <span class="title">Аккаунт</span>
                             </a>
                         </li>
                     </ul>
@@ -59,14 +59,14 @@
                         <ul class="nav-right">
                             <li>
                                 <form class="form-horizontal width-300p mrg-top-10 mrg-right-20" [formGroup]="searchForm" (submit)="submitSearchForm()">
-                                    <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Search" id="search" name="search" formControlName="search">
+                                    <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search">
                                 </form>
                             </li>
                             <li *ngIf="userRole === 'USER'">
-                                <a class="side-nav-toggle cursor-p" (click)="logOut()">Logout</a>
+                                <a class="side-nav-toggle cursor-p" (click)="logOut()">Выход</a>
                             </li>
                             <li *ngIf="userRole === 'UNAUTHORIZED'">
-                                <a routerLink="/login" class="side-nav-toggle cursor-p">Login</a>
+                                <a routerLink="/login" class="side-nav-toggle cursor-p">Вход</a>
                             </li>
                         </ul>
                     </div>

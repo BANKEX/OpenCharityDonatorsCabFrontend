@@ -14,15 +14,11 @@ export class SocketService {
 	}
 
 	public getData = (data) => {
-		let observable = Observable.create((observer) => {
+		return Observable.create((observer) => {
 			this.socket.on(data, (dataArr) => {
 				observer.next(dataArr);
 			});
-			return () => {
-				this.socket.disconnect();
-			};
 		});
-		return observable;
 	}
 
 }

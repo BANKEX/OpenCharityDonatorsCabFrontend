@@ -25,28 +25,28 @@
                                 <div class="vertical-align full-height pdd-horizon-70">
                                     <div class="table-cell">
                                         <div class="pdd-horizon-15">
-                                            <h1 class="mrg-btm-30">Create Your account</h1>
+                                            <h1 class="mrg-btm-30">Создать аккаунт</h1>
                                             <form [formGroup]="registrationForm" (submit)="registrationSubmit()">
                                                 <div class="form-group">
-                                                    <label class="text-normal text-dark">First Name</label>
+                                                    <label class="text-normal text-dark">Имя</label>
                                                     <input type="text" class="form-control" id="name" formControlName="name">
-                                                    <span *ngIf="isControlInvalid('name')" class="error-label">Field is required!</span>
+                                                    <span *ngIf="isControlInvalid('name')" class="error-label">Обязательно для заполнения!</span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="text-normal text-dark">Last Name</label>
+                                                    <label class="text-normal text-dark">Фамилия</label>
                                                     <input type="text" class="form-control" id="surname" formControlName="surname">
-                                                    <span *ngIf="isControlInvalid('surname')" class="error-label">Field is required!</span>
+                                                    <span *ngIf="isControlInvalid('surname')" class="error-label">Обязательно для заполнения!</span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="text-normal text-dark">Email Address</label>
+                                                    <label class="text-normal text-dark">Эл. адрес</label>
                                                     <input type="email" class="form-control" id="email" formControlName="email">
-                                                    <span *ngIf="isControlInvalid('email')" class="error-label">Field is required!</span>
+                                                    <span *ngIf="isControlInvalid('email')" class="error-label">Обязательно для заполнения!</span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary btn-block border-radius-6" [disabled]="!registrationForm.valid">Create New Account</button>
+                                                    <button type="submit" class="btn btn-primary btn-block border-radius-6" [disabled]="!registrationForm.valid">Создать</button>
                                                 </div>
                                             </form>
-                                            <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+                                            <p>У вас уже есть учетная запись? <a routerLink="/login">Войти</a></p>
                                         </div>
                                     </div>
                                 </div>

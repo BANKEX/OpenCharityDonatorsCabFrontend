@@ -1,18 +1,18 @@
 <div class="modal-content" style="width: 500px;">
     <div class="modal-header">
-        <h4>Enter your email</h4>
+        <h4>Введите эл. адрес</h4>
     </div>
     <div class="modal-body">
         <form class="form-horizontal">
             <div class="form-group row">
-                <label for="form-1-3" class="col-md-2 control-label">Email</label>
+                <label for="form-1-3" class="col-md-2 control-label">Адрес</label>
                 <div class="col-md-10">
-                    <input type="email" email="true" class="form-control" id="form-1-3" placeholder="Email" [(ngModel)]="emailModel" #email="ngModel" required name="email">
+                    <input type="email" email="true" class="form-control" id="form-1-3" placeholder="Эл. адрес" [(ngModel)]="emailModel" #email="ngModel" required name="email">
                 </div>
             </div>
             <div class="pull-right">
-                <button class="btn btn-primary btn-sm" [disabled]="email.invalid" (click)="passFormSubmit()">Confirm</button>
-                <button class="btn btn-default btn-sm" data-dismiss="modal" (click)="onCloseCancel()">Cancel</button>
+                <button class="btn btn-primary btn-sm" [disabled]="email.invalid" (click)="passFormSubmit()">Подтвердить</button>
+                <button class="btn btn-default btn-sm" data-dismiss="modal" (click)="onCloseCancel()">Отменить</button>
             </div>
         </form>
     </div>

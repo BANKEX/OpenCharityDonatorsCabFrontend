@@ -138,7 +138,7 @@ export class AccountComponent implements OnInit {
       openErrorModal() {
         const dialogRef = this.dialog.open(
           AlertModalComponent,
-          {data: {title: 'Error!', content: 'Error with changing user information!', closeLabel: 'Cancel'}}
+          {data: {title: 'Ошибка!', content: 'Ошибка при изменении информации пользователя!', closeLabel: 'Отменить'}}
         );
         dialogRef.afterClosed()
           .takeWhile(() => this.httpAlive)

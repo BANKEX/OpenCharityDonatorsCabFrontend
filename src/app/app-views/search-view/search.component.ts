@@ -34,7 +34,6 @@ export class SearchComponent implements OnInit {
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					console.log(response);
 					if (response !== '') {
 						this.searchListData = response;
 					}

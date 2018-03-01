@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
 	openRegErrorModal() {
 		const dialogRef = this.dialog.open(
 			AlertModalComponent,
-			{data: {title: 'Login error!', content: 'The username or password you entered is incorrect.', closeLabel: 'Cancel'}}
+			{data: {title: 'Ошибка входа!', content: 'Неверное имя пользователя или пароль.', closeLabel: 'Отменить'}}
 		);
 		dialogRef.afterClosed()
 			.takeWhile(() => this.httpAlive)
@@ -99,9 +99,9 @@ export class LoginComponent implements OnInit {
 			.takeWhile(() => this.httpAlive)
 			.subscribe(result => {
 				if (result === 'success') {
-					this.openForgotPassResultModal('Forgot password', 'Please check your email to change your password!', 'OK');
+					this.openForgotPassResultModal('Забыли пароль', 'Проверьте электронную почту, чтобы изменить пароль!', 'OK');
 				} else if (result === 'error') {
-					this.openForgotPassResultModal('Forgot password', 'Error occurred! Please try again.', 'Cancel');
+					this.openForgotPassResultModal('Забыли пароль', 'Произошла ошибка! Пожалуйста, попробуйте еще раз.', 'Отменить');
 				}
 			});
 	}

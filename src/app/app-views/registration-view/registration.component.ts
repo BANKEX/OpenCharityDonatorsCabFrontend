@@ -87,7 +87,7 @@ export class RegistrationComponent implements OnInit {
 
 	openRegSuccessModal() {
 	const dialogRef = this.dialog.open(
-		AlertModalComponent, {data: {title: 'Registration success!', content: 'You successfully created account!', closeLabel: 'Login'}}
+		AlertModalComponent, {data: {title: 'Регистрация успешна!', content: 'Вы успешно создали аккаунт!', closeLabel: 'Войти'}}
 	);
 	dialogRef.afterClosed()
 		.takeWhile(() => this.httpAlive)
@@ -101,7 +101,7 @@ export class RegistrationComponent implements OnInit {
 	openRegErrorModal() {
 	const dialogRef = this.dialog.open(
 		AlertModalComponent,
-		{data: {title: 'Registration error!', content: 'Registration error! Please try again.', closeLabel: 'Cancel'}}
+		{data: {title: 'Ошибка регистрации!', content: 'Ошибка регистрации! Пожалуйста, попробуйте еще раз.', closeLabel: 'Отменить'}}
 	);
 	dialogRef.afterClosed()
 		.takeWhile(() => this.httpAlive)
