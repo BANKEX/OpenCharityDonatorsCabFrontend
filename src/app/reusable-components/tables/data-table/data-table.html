@@ -11,8 +11,8 @@
                             <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-2'}" role="tab" data-toggle="tab" #defaultTabEvents (click)="setTabValue('default','card-tab-2'); setActiveMainTab('getCharityEvents');">События</a>
                         </li>
                         <li class="nav-item nav-item-tab pointer position-rel" *ngFor="let item of tabsArray">
-                            <a *ngIf="item.type == 'donation'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.realWorldIdentifier}}</a>
-                            <a *ngIf="item.type == 'events'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('custom', item.address)">{{item.name}}</a>
+                            <a *ngIf="item.type == 'donation'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('incomingDonation', item.address)">{{item.realWorldIdentifier}}</a>
+                            <a *ngIf="item.type == 'events'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('charityEven', item.address)">{{item.name}}</a>
                             <div class="ei ei-unchecked tab-close" (click)="removeFromTabs(item.address);"></div>
                         </li>
                     </ul>
@@ -189,13 +189,35 @@
                     <!-- Repeat tabs start -->
                     <div role="tabpanel" class="tab-pane" *ngFor="let item of tabsArray" [ngClass]="{'active':tabidex === item.address}">
                         <div class="table-overflow" *ngIf="item.type == 'donation'">
-                            <div class="card card-body no-border">
+                            <div class="card card-body no-border no-mrg-btm">
                                 <p><b>Address:</b>{{item.address}}</p>
                                 <p><b>Amount:</b> {{item.amount}}</p>
                                 <p><b>Date:</b> {{item.date}}</p>
                                 <p><b>Note:</b> {{item.note}}</p>
                                 <p><b>Name:</b> {{item.realWorldIdentifier}}</p>
                                 <p><b>Tags:</b> {{item.tags}}</p>
+                            </div>
+                            <div class="card-block padding-25" *ngIf="item.history.length > 0">
+                                <div class="card">
+                                    <table class="table table-striped donations-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Charity Event</th>
+                                                <th>Transaction</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let history of item.history">
+                                                <td>{{ history.date | date:'MM.dd.yyyy' }}</td>
+                                                <td>{{history.charityEvent}}</td>
+                                                <td>{{history.transactionHash}}</td>
+                                                <td><span class="transaction-value">+ {{history.amount}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div class="table-overflow" *ngIf="item.type == 'events'">
@@ -206,6 +228,28 @@
                                 <p><b>Raised:</b> {{item.raised}}</p>
                                 <p><b>Target:</b> {{item.target}}</p>
                                 <p><b>Date:</b> {{item.date}}</p>
+                            </div>
+                            <div class="card-block padding-25" *ngIf="item.history.length > 0">
+                                <div class="card">
+                                    <table class="table table-striped donations-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Charity Event</th>
+                                                <th>Transaction</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let history of item.history">
+                                                <td>{{ history.date | date:'MM.dd.yyyy' }}</td>
+                                                <td>{{history.charityEvent}}</td>
+                                                <td>{{history.transactionHash}}</td>
+                                                <td><span class="transaction-value">+ {{history.amount}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

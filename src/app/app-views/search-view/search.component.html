@@ -1,20 +1,118 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="table-overflow">
-                <table class="table table-lg table-hover">
-                    <tbody>
-                        <tr *ngFor="let item of searchListData" class="cursor-p">
-                            <td>
-                                <div class="mrg-top-15">
-                                    <b class="text-info font-size-16">{{item.name}}</b>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div *ngIf="searchListData.length == 0" class="table-no-item">
-                    <span>No items found</span>
+            <div class="card">
+                <div class="tab-info">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item pointer">
+                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-1'}" role="tab" data-toggle="tab" #defaultTab (click)="setTabValue('default','card-tab-1'); setActiveMainTab('getIncomingDonation');">Пожертвования</a>
+                        </li>
+                        <li class="nav-item pointer">
+                            <a class="nav-link" [ngClass]="{'active':tabidex === 'card-tab-2'}" role="tab" data-toggle="tab" #defaultTabEvents (click)="setTabValue('default','card-tab-2'); setActiveMainTab('getCharityEvents');">События</a>
+                        </li>
+                        <li class="nav-item nav-item-tab pointer position-rel" *ngFor="let item of tabsArray">
+                            <a *ngIf="item.type == 'donation'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('incomingDonation', item.address)">{{item.realWorldIdentifier}}</a>
+                            <a *ngIf="item.type == 'events'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('charityEven', item.address)">{{item.name}}</a>
+                            <div class="ei ei-unchecked tab-close" (click)="removeFromTabs(item.address);"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" [ngClass]="{'active':tabidex === 'card-tab-1'}">
+                        <div class="table-overflow">
+                            <table class="table table-lg table-hover" datatable>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>RealWorldIdentifier</th>
+                                        <th>Amount</th>
+                                        <th>Note</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of incomingDonations" (click)="openDetailedtIncomingDonation(item.address, 'incomingDonation')" class="cursor-p">
+                                        <td></td>
+                                        <td>
+                                            <div class="relative mrg-top-15">
+                                                <span class="status online"> </span>
+                                                <span class="pdd-left-20">{{item.realWorldIdentifier}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-dark font-size-16">${{item.amount}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.note}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <span>{{item.date}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="incomingDonations.length == 0" class="table-no-item">
+                                <span>No items</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" [ngClass]="{'active':tabidex === 'card-tab-2'}">
+                        <div class="table-overflow">
+                            <table class="table table-lg table-hover" datatable>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Payed</th>
+                                        <th>Raised</th>
+                                        <th>Target</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of charityEvents" (click)="openDetailedtCharityEvent(item.address, 'charityEven')" class="cursor-p">
+                                        <td></td>
+                                        <td>
+                                            <div class="relative mrg-top-15">
+                                                <span class="status online"> </span>
+                                                <span class="pdd-left-20">{{item.name}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-dark font-size-16">${{item.payed}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.raised}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <b class="text-info font-size-16">{{item.target}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mrg-top-15">
+                                                <span>{{item.date}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="charityEvents.length == 0" class="table-no-item">
+                                <span>No items</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

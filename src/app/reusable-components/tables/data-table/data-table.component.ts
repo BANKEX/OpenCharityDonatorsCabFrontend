@@ -162,12 +162,25 @@ export class DataTableComponent implements OnInit {
 			response => {
 				let newData = response;
 				newData['type'] = 'donation';
+				newData['history'] = this.getHistory(response.history);
 				newData['tab'] = tab;
 				this.addToTabs(newData);
 			},
 			error => {
 				console.log(error);
 			});
+	}
+
+	getHistory(data) {
+		if (data.length > 0) {
+			let newArr = [];
+			for (let i in data) {
+				newArr.push(JSON.parse(data[i]));
+			}
+			return newArr;
+		} else {
+			return [];
+		}
 	}
 
 	openDetailedtCharityEvent(hash, tab) {
@@ -177,6 +190,7 @@ export class DataTableComponent implements OnInit {
 			response => {
 				let newData = response;
 				newData['type'] = 'events';
+				newData['history'] = this.getHistory(response.history);
 				newData['tab'] = tab;
 				this.addToTabs(newData);
 			},
@@ -243,7 +257,7 @@ export class DataTableComponent implements OnInit {
 			'lastName': this.userData['lastName'],
 			'tags': this.userData['tags'],
 			'trans': this.favoritesArr
-		}
+		};
 
 		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/user/change/`, JSON.stringify(sendData))
 		.takeWhile(() => this.httpAlive)
