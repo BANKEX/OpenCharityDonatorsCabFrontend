@@ -83,10 +83,10 @@ export class CommonLayoutComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-			this.router.navigate(['/login']);
+				this.router.navigate(['/login']);
 			},
 			error => {
-			this.router.navigate(['/login']);
+				this.router.navigate(['/login']);
 			});
 	}
 

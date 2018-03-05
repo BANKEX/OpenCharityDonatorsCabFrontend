@@ -1203,6 +1203,10 @@
     padding: 20px !important;
 }
 
+.padding-8-0 {
+    padding: 8px 0 !important;
+}
+
 .padding-25 {
     padding: 25px !important;
 }
@@ -2878,6 +2882,10 @@
 
 /* Float */
 
+.float-right {
+    float: right;
+}
+
 @include screen-mobile {
     .pull-left-sm {
         float: left !important;
@@ -3139,4 +3147,27 @@
     position: absolute;
     right: 0;
     padding-right: 7px;
+}
+
+.item-card {
+    margin: 20px;
+    width: 500px;
+}
+
+.card-address {
+    text-align: right;
+    color: #d0d5dc;
+    position: absolute;
+    right: 20px;
+}
+
+.card-label-bold {
+    font-size: 16px;
+    font-weight: bold;
+    color: #515365;
+}
+
+.card-label-yellow {
+    font-size: 18px;
+    color: #3dc33c;
 }

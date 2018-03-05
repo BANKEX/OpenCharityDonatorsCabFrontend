@@ -14,7 +14,7 @@ exports.PROD_PORT = 8088;
  */
 exports.USE_DEV_SERVER_PROXY = false;
 exports.DEV_SERVER_PROXY_CONFIG = {
-	'**': 'http://localhost:8089'
+    '**': 'http://localhost:8089'
 }
 
 /**
@@ -32,9 +32,9 @@ exports.PROD_SOURCE_MAPS = 'source-map';
  * https://github.com/webpack/docs/wiki/webpack-dev-middleware#watchoptionsaggregatetimeout
  */
 exports.DEV_SERVER_WATCH_OPTIONS = {
-	poll: 1000,
-	aggregateTimeout: 1000,
-	ignored: /node_modules/
+    poll: 1000,
+    aggregateTimeout: 1000,
+    ignored: /node_modules/
 }
 
 /**
@@ -44,72 +44,73 @@ exports.DEV_SERVER_WATCH_OPTIONS = {
 exports.STORE_DEV_TOOLS = 'monitor'
 
 exports.EXCLUDE_SOURCE_MAPS = [
-	// these packages have problems with their sourcemaps
-	root('node_modules/@angular'),
-	root('node_modules/rxjs')
+    // these packages have problems with their sourcemaps
+    root('node_modules/@angular'),
+    root('node_modules/rxjs'),
+    root('node_modules/ngx-cookie-service')
 ]
 
 exports.MY_COPY_FOLDERS = [
-	// use this for folders you want to be copied in to Client dist
-	// src/assets and index.html are already copied by default.
-	// format is { from: 'folder_name', to: 'folder_name' }
-	//   {from: 'build/contracts', to: 'assets/contracts'}
+    // use this for folders you want to be copied in to Client dist
+    // src/assets and index.html are already copied by default.
+    // format is { from: 'folder_name', to: 'folder_name' }
+    //   {from: 'build/contracts', to: 'assets/contracts'}
 ]
 
 exports.MY_POLYFILL_DLLS = [
-	// list polyfills that you want to be included in your dlls files
-	// this will speed up initial dev server build and incremental builds.
-	// Be sure to run `npm run build:dll` if you make changes to this array.
+    // list polyfills that you want to be included in your dlls files
+    // this will speed up initial dev server build and incremental builds.
+    // Be sure to run `npm run build:dll` if you make changes to this array.
 ]
 
 exports.MY_VENDOR_DLLS = [
-	// list vendors that you want to be included in your dlls files
-	// this will speed up initial dev server build and incremental builds.
-	// Be sure to run `npm run build:dll` if you make changes to this array.
+    // list vendors that you want to be included in your dlls files
+    // this will speed up initial dev server build and incremental builds.
+    // Be sure to run `npm run build:dll` if you make changes to this array.
 ]
 
 exports.MY_CLIENT_PLUGINS = [
-	// use this to import your own webpack config Client plugins.
+    // use this to import your own webpack config Client plugins.
 ]
 
 exports.MY_CLIENT_PRODUCTION_PLUGINS = [
-	// use this to import your own webpack config plugins for production use.
+    // use this to import your own webpack config plugins for production use.
 ]
 
 exports.MY_CLIENT_RULES = [
-	// use this to import your own rules for Client webpack config.
+    // use this to import your own rules for Client webpack config.
 ]
 
 exports.MY_TEST_RULES = [
-	// use this to import your own rules for Test webpack config.
+    // use this to import your own rules for Test webpack config.
 ]
 
 exports.MY_TEST_PLUGINS = [
-	// use this to import your own Test webpack config plugins.
+    // use this to import your own Test webpack config plugins.
 ]
 
 
 
 exports.DEV_ENVIRONMENT = {
-	'networkId': 488413,
-	'tokenAddress': '0x6a183381d14371b4a228cca37802c09bd166ba9e',
-	'rpcProviderUrl': 'https://rpcprovider.staging.bankex.team:8635',
-	'websocketProviderUrl': 'wss://wsprovider.staging.bankex.team:8636',
-	'organizations':  [
-		'0xbb8251c7252b6fec412a0a99995ebc1a28e4e103',
-		'0xc9afa3e4e78a678ffb836c4062547b1dc8dd592f',
-		'0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'
-	]
+    'networkId': 488413,
+    'tokenAddress': '0x6a183381d14371b4a228cca37802c09bd166ba9e',
+    'rpcProviderUrl': 'https://rpcprovider.staging.bankex.team:8635',
+    'websocketProviderUrl': 'wss://wsprovider.staging.bankex.team:8636',
+    'organizations': [
+        '0xbb8251c7252b6fec412a0a99995ebc1a28e4e103',
+        '0xc9afa3e4e78a678ffb836c4062547b1dc8dd592f',
+        '0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'
+    ]
 };
 
 exports.PROD_ENVIRONMENT = {
-	'networkId': 488413,
-	'tokenAddress': '0x6a183381d14371b4a228cca37802c09bd166ba9e',
-	'rpcProviderUrl': 'https://rpcprovider.staging.bankex.team:8635',
-	'websocketProviderUrl': 'wss://wsprovider.staging.bankex.team:8636',
-	'organizations':  [
-		'0xa9a667764e0520393c5b8a17b389b7408996f821',
-		'0x371f1b07649009fc7e4e617d1b8a5ef05b0157c2',
-		'0xbfcf6117ab933edddbcad327f82f0f5f9ab01097'
-	]
+    'networkId': 488413,
+    'tokenAddress': '0x6a183381d14371b4a228cca37802c09bd166ba9e',
+    'rpcProviderUrl': 'https://rpcprovider.staging.bankex.team:8635',
+    'websocketProviderUrl': 'wss://wsprovider.staging.bankex.team:8636',
+    'organizations': [
+        '0xa9a667764e0520393c5b8a17b389b7408996f821',
+        '0x371f1b07649009fc7e4e617d1b8a5ef05b0157c2',
+        '0xbfcf6117ab933edddbcad327f82f0f5f9ab01097'
+    ]
 };
