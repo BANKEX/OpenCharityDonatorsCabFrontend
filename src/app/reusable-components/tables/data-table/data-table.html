@@ -1,5 +1,19 @@
 <div class="container-fluid">
     <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" [formGroup]="organisationForm">
+                <input id="typeahead-focus" type="text" class="form-control width-300p" [(ngModel)]="listModel" [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)" #instance="ngbTypeahead" placeholder="Выберите организацию"
+                    (selectItem)="onItemSelected($event)" formControlName="name" />
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-horizontal width-300p relative pull-right" [formGroup]="searchForm" (submit)="submitSearchForm()">
+                <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search" [(ngModel)]="searchVal">
+                <div *ngIf="searchVal != ''" class="ei ei-close clear-search-icon" (click)="clearSearch()"></div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="tab-info">
@@ -203,7 +217,7 @@
                                 <div class="mrg-top-10">
                                     <span class="font-size-13">{{item.date}}</span>
                                     <div class="float-right">
-                                        <span class="card-label-bold mrg-right-10">Amount</span>
+                                        <span class="card-label-bold mrg-right-10">Amount:</span>
                                         <span class="card-label-yellow">{{item.amount}}</span>
                                     </div>
                                 </div>
@@ -249,7 +263,7 @@
                                 <div class="mrg-top-10">
                                     <span class="font-size-13">{{item.date}}</span>
                                     <div class="float-right">
-                                        <span class="card-label-bold mrg-right-10">Target</span>
+                                        <span class="card-label-bold mrg-right-10">Target:</span>
                                         <span class="card-label-yellow">{{item.target}}</span>
                                     </div>
                                 </div>

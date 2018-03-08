@@ -1,7 +1,6 @@
-@import '../variables'; 
-
+@import '../variables';
 [_nghost-c1] {
-    border: 1px solid $border-color !important;
+    border: 1px solid $border-color;
     padding: 25px 20px !important;
 }
 
@@ -24,7 +23,9 @@
     border-radius: 0 !important;
 }
 
-.ngb-dp-day[_ngcontent-c4], .ngb-dp-weekday[_ngcontent-c4], .ngb-dp-week-number[_ngcontent-c4] {
+.ngb-dp-day[_ngcontent-c4],
+.ngb-dp-weekday[_ngcontent-c4],
+.ngb-dp-week-number[_ngcontent-c4] {
     width: 36px !important;
     height: 32px !important;
 }
@@ -51,7 +52,6 @@ select[_ngcontent-c5] {
 
 .btn-link {
     color: $default-text-color;
-
     &:hover,
     &:focus {
         color: $default-dark;

@@ -53,6 +53,15 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"> <b>Новый пароль</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" id="newpass" formControlName="newpass">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <p class="mrg-top-10 text-dark"> <b>Повторите пароль</b></p>
                                     </div>
                                     <div class="col-md-6">
@@ -60,15 +69,7 @@
                                         <span *ngIf="isControlInvalid('reppass')" class="error-label">Invalid value!</span>
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"> <b>Новый пароль</b></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="password" class="form-control" id="newpass" formControlName="newpass">
-                                    </div>
-                                </div>
+
                                 <!-- <hr>
                                 <div class="row">
                                     <div class="col-md-3">

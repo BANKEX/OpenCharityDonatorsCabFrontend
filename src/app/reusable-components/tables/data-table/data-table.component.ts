@@ -1,10 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {Observable} from 'rxjs/Observable';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { HttpService } from '../../../app-services/http.service';
 import { SocketService } from '../../../app-services/socket.service';
 import { UserService } from '../../../app-services/user.service';
-import 'rxjs/add/operator/takeWhile';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component ({
 	selector: 'app-data-table',
@@ -12,13 +20,18 @@ import 'rxjs/add/operator/takeWhile';
 })
 export class DataTableComponent implements OnInit {
 
-	@Input() organizationId;
+	searchForm: FormGroup;
+	organisationForm: FormGroup;
+
+	public organizationId;
 
 	@ViewChild('defaultTab', {read: ElementRef}) defaultTab: ElementRef;
 	@ViewChild('defaultTabEvents', {read: ElementRef}) defaultTabEvents: ElementRef;
 
 	public incomingDonations = [];
 	public charityEvents = [];
+
+	public searchVal = '';
 
 	public incomingDonationsFavorites = [];
 	public charityEventsFavorites = [];
@@ -29,19 +42,78 @@ export class DataTableComponent implements OnInit {
 	public activeMainTab = 'getIncomingDonation';
 	public tabsArray = [];
 	public tabidex = 'card-tab-1';
-    public activeTab: string = 'default';
+	public activeTab: string = 'default';
 
-    private httpAlive = true;
+	public listItems = [];
+
+	private httpAlive = true;
+
+	public listModel: any;
 	private userData = {};
 
 	private incomingDonationsAlive = true;
 	private charityEventsAlive = true;
 
-	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService) {}
+	private organizationList = [];
+
+	@ViewChild('instance') instance: NgbTypeahead;
+	focus$ = new Subject<string>();
+	click$ = new Subject<string>();
+
+	search = (text$: Observable<string>) =>
+		text$
+		.debounceTime(200).distinctUntilChanged()
+		.merge(this.focus$)
+		.merge(this.click$.filter(() => !this.instance.isPopupOpen()))
+		.map(term => (term === '' ? this.listItems : this.listItems.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10));
+
+	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService, private fb: FormBuilder) {}
 
 	ngOnInit() {
-        this.userRole = this.userService.userData['userRole'];
+		this.userRole = this.userService.userData['userRole'];
+		this.initSearchForm();
+		this.initOrganisationForm();
+		this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+	}
+
+	generateListItem(arr) {
+		let newArr = [];
+		for (var i in arr) {
+			newArr.push(arr[i].name);
+		}
+		return newArr;
+	}
+
+	getLocalOrganisationId(name) {
+		for(let i in this.organizationList) {
+			if (this.organizationList[i].name === name) {
+				return this.organizationList[i].ORGaddress;
+			}
+		}
+	}
+
+	onItemSelected(val) {
+		this.incomingDonations = [];
+		this.charityEvents = [];
+		this.searchForm.reset();
+		this.searchVal = '';
+		this.incomingDonationsAlive = true;
+	 	this.charityEventsAlive = true;
+		this.organizationId = this.getLocalOrganisationId(val.item);
 		this.initView();
+	}
+
+	getListData(url) {
+		this.httpService.httpGet(url)
+			.takeWhile(() => this.httpAlive)
+			.subscribe(
+				response => {
+					this.organizationList = response;
+					this.listItems = this.generateListItem(this.organizationList);
+				},
+				error => {
+					console.log(error);
+				});
 	}
 
 	initView() {
@@ -271,6 +343,64 @@ export class DataTableComponent implements OnInit {
 
 	setActiveMainTab(value) {
 		this.activeMainTab = value;
+	}
+
+	initSearchForm() {
+		this.searchForm = this.fb.group({
+			search: ['',
+				Validators.required
+			]
+		});
+	}
+
+	initOrganisationForm() {
+		this.organisationForm = this.fb.group({
+			name: ['']
+		});
+	}
+
+	clearSearch() {
+		this.incomingDonationsAlive = true;
+	 	this.charityEventsAlive = true;
+		this.incomingDonations = [];
+		this.charityEvents = [];
+		this.searchForm.reset();
+		this.organisationForm.reset();
+		this.searchVal = '';
+	}
+
+	generateSearchData(data) {
+		this.incomingDonations = [];
+		this.charityEvents = [];
+		for (let item in data) {
+			if(data[item].realWorldIdentifier !== undefined) {
+				data[item]['type'] = 'donation';
+				this.incomingDonations.unshift(data[item]);
+			} else {
+				data[item]['type'] = 'events';
+				this.charityEvents.unshift(data[item]);
+			}
+		}
+	}
+
+	submitSearchForm() {
+		this.organisationForm.reset();
+		const controls = this.searchForm.controls;
+		if (this.searchForm.invalid) {
+			Object.keys(controls)
+				.forEach(controlName => controls[controlName].markAsTouched());
+			return;
+		}
+		const data = {'text': this.searchForm.value['search'].toLowerCase()};
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
+			.takeWhile(() => this.httpAlive)
+			.subscribe(
+				response => {
+					this.generateSearchData(Object.values(response));
+				},
+				error => {
+					console.log(error);
+				});
 	}
 
 	// tslint:disable-next-line:use-life-cycle-interface

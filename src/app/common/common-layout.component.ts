@@ -12,9 +12,6 @@ import 'rxjs/add/operator/takeWhile';
 })
 
 export class CommonLayoutComponent implements OnInit {
-
-	searchForm: FormGroup;
-
 	public userRole: string;
 	public app: any;
 	public headerThemes: any;
@@ -32,12 +29,6 @@ export class CommonLayoutComponent implements OnInit {
 		public router: Router,
 	  	private fb: FormBuilder
 	) {
-		router.events.subscribe((val) => {
-			let urlChanged = val instanceof NavigationStart;
-			if (urlChanged === true && router['url'].indexOf('search') > -1) {
-				this.searchForm.reset();
-			}
-		});
 		this.app = {
 			layout: {
 				sidePanelOpen: false,
@@ -66,16 +57,6 @@ export class CommonLayoutComponent implements OnInit {
 
 	ngOnInit() {
 		this.userRole = this.userService.userData['userRole'];
-
-		this.initSearchForm();
-	}
-
-	initSearchForm() {
-		this.searchForm = this.fb.group({
-			search: ['',
-				Validators.required
-			]
-		});
 	}
 
 	logOut() {
@@ -88,16 +69,6 @@ export class CommonLayoutComponent implements OnInit {
 			error => {
 				this.router.navigate(['/login']);
 			});
-	}
-
-	submitSearchForm() {
-		const controls = this.searchForm.controls;
-		if (this.searchForm.invalid) {
-			Object.keys(controls)
-				.forEach(controlName => controls[controlName].markAsTouched());
-			return;
-		}
-		this.router.navigate(['/search', this.searchForm.value['search']]);
 	}
 
 }

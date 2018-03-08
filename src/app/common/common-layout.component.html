@@ -31,7 +31,7 @@
                             </a>
                         </li>
                         <li clas="nav-item" routerLinkActive="active" *ngIf="userRole == 'USER'">
-                            <a class="mrg-top-30" href="" [routerLink]="['/account']">
+                            <a class="no-mrg-top" href="" [routerLink]="['/account']">
                                 <span class="icon-holder">
                                     <i class="ei-star-1"></i>
                                 </span>
@@ -57,11 +57,6 @@
                             </li>
                         </ul>
                         <ul class="nav-right">
-                            <li>
-                                <form class="form-horizontal width-300p mrg-top-10 mrg-right-20" [formGroup]="searchForm" (submit)="submitSearchForm()">
-                                    <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search">
-                                </form>
-                            </li>
                             <li *ngIf="userRole === 'USER'">
                                 <a class="side-nav-toggle cursor-p" (click)="logOut()">Выход</a>
                             </li>

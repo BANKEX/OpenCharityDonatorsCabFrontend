@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { DashboardRoutes } from './dashboard-routing.module';
 
@@ -15,7 +18,10 @@ import { DataTableComponent } from '../../reusable-components/tables/data-table/
 @NgModule({
 	imports: [
 		RouterModule.forChild(DashboardRoutes),
-		CommonModule
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		NgbModule
 	],
 	declarations: [
 		DashboardComponent,

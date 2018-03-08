@@ -37,7 +37,7 @@ import 'hammerjs';
     imports: [
         BrowserModule,
         RouterModule.forRoot(appRoutes, { useHash: true }),
-        NgbModule.forRoot(),
+		NgbModule.forRoot(),
         PerfectScrollbarModule,
         HttpModule,
         MatDialogModule,
@@ -51,11 +51,11 @@ import 'hammerjs';
         AuthenticationLayoutComponent,
         AlertModalComponent,
         ForgotPassModalComponent,
-        NotFound404Component
+		NotFound404Component
     ],
     entryComponents: [
       AlertModalComponent,
-      ForgotPassModalComponent
+	  ForgotPassModalComponent
     ],
     providers: [GuardService, UserService, CookieService, SocketService],
     bootstrap: [AppComponent]

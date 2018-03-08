@@ -8,6 +8,13 @@ textarea {
     margin-bottom: 25px;
 }
 
+.clear-search-icon {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    cursor: pointer;
+}
+
 .form-control {
     border: 1px solid $border-color;
     border-radius: 2px;
