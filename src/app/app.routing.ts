@@ -7,40 +7,40 @@ import { GuardService } from './app-services/guard.service';
 import { CommonLayoutComponent } from './common/common-layout.component';
 
 export const appRoutes: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-        data: {
-          roleAccess: ['USER']
-        }
-    },
-    {
-        path: '',
-        component: CommonLayoutComponent,
-        children: [
-            {
-                path: 'dashboard',
-                loadChildren: './app-views/dashboard-view/dashboard.module#DashboardModule'
-            }
-        ]
-    },
-    {
-      path: 'account',
-      component: CommonLayoutComponent,
-      canActivate: [GuardService],
-      loadChildren: './app-views/account-view/account.module#AccountModule',
-      data: {
-        roleAccess: ['USER']
-      }
-    },
-    {
-      path: 'registration',
-      loadChildren: './app-views/registration-view/registration.module#RegistrationModule'
-    },
-    {
-      path: 'login',
-      loadChildren: './app-views/login-view/login.module#LoginModule'
-    }
+	{
+		path: '',
+		redirectTo: 'dashboard',
+		pathMatch: 'full',
+		data: {
+			roleAccess: ['USER']
+		}
+	},
+	{
+		path: '',
+		component: CommonLayoutComponent,
+		children: [
+			{
+				path: 'dashboard',
+				loadChildren: './app-views/dashboard-view/dashboard.module#DashboardModule'
+			}
+		]
+	},
+	{
+		path: 'account',
+		component: CommonLayoutComponent,
+		canActivate: [GuardService],
+		loadChildren: './app-views/account-view/account.module#AccountModule',
+		data: {
+			roleAccess: ['USER']
+		}
+	},
+	{
+		path: 'registration',
+		loadChildren: './app-views/registration-view/registration.module#RegistrationModule'
+	},
+	{
+		path: 'login',
+		loadChildren: './app-views/login-view/login.module#LoginModule'
+	}
 ];
 
