@@ -4,6 +4,7 @@ import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable} from 'rxjs/Observable';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
+import { DatePipe } from '@angular/common';
 import { HttpService } from '../../../app-services/http.service';
 import { SocketService } from '../../../app-services/socket.service';
 import { UserService } from '../../../app-services/user.service';
@@ -54,6 +55,9 @@ export class DataTableComponent implements OnInit {
 	private incomingDonationsAlive = true;
 	private charityEventsAlive = true;
 
+	private allIncomingDonationsAlive = true;
+	private allCharityEventsAlive = true;
+
 	private organizationList = [];
 
 	@ViewChild('instance') instance: NgbTypeahead;
@@ -71,9 +75,17 @@ export class DataTableComponent implements OnInit {
 
 	ngOnInit() {
 		this.userRole = this.userService.userData['userRole'];
+		this.initView();
 		this.initSearchForm();
 		this.initOrganisationForm();
-		this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+	}
+
+	initView() {
+		if (this.userService.userData['userRole'] === 'USER') {
+			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
+		} else {
+			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+		}
 	}
 
 	generateListItem(arr) {
@@ -81,6 +93,7 @@ export class DataTableComponent implements OnInit {
 		for (var i in arr) {
 			newArr.push(arr[i].name);
 		}
+		newArr.unshift('Все организации');
 		return newArr;
 	}
 
@@ -97,10 +110,16 @@ export class DataTableComponent implements OnInit {
 		this.charityEvents = [];
 		this.searchForm.reset();
 		this.searchVal = '';
-		this.incomingDonationsAlive = true;
-	 	this.charityEventsAlive = true;
-		this.organizationId = this.getLocalOrganisationId(val.item);
-		this.initView();
+		if (val.item === 'Все организации') {
+			this.allIncomingDonationsAlive = true;
+			this.allCharityEventsAlive = true;
+			this.getAllData();
+		} else {
+			this.incomingDonationsAlive = true;
+			this.charityEventsAlive = true;
+			this.organizationId = this.getLocalOrganisationId(val.item);
+			this.getOrganisationData();
+		}
 	}
 
 	getListData(url) {
@@ -110,20 +129,76 @@ export class DataTableComponent implements OnInit {
 				response => {
 					this.organizationList = response;
 					this.listItems = this.generateListItem(this.organizationList);
+					//this.organisationForm.setValue({ name: 'Все организации' });
+					this.getAllData();
 				},
 				error => {
 					console.log(error);
 				});
 	}
 
-	initView() {
-		if (this.userService.userData['userRole'] === 'USER') {
-			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
-		}
-		else {
-			this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
-		    this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
-		}
+	getAllData() {
+		let data = {};
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/`, data)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				this.getAllIncomingDonationsSockets(response['_body']);
+			},
+			error => {
+				console.log(error);
+			});
+	}
+
+	getAllIncomingDonationsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.allIncomingDonationsAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.incomingDonationsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.incomingDonations.unshift(JSON.parse(data));
+				}
+			} else {
+				this.allIncomingDonationsAlive = false;
+				this.getAllDataCharityEvents();
+			}
+		});
+	}
+
+	getAllDataCharityEvents() {
+		let data = {};
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				this.getAllCharityEventsSockets(response['_body']);
+			},
+			error => {
+				console.log(error);
+			});
+	}
+
+	getAllCharityEventsSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.allCharityEventsAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.charityEventsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.charityEvents.unshift(JSON.parse(data));
+				}
+			} else {
+				this.allCharityEventsAlive = false;
+			}
+		});
+	}
+
+	getOrganisationData() {
+		this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+		this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
 	}
 
 	getUserFavorites(url) {
@@ -133,8 +208,7 @@ export class DataTableComponent implements OnInit {
 			response => {
 				this.favoritesArr = response.data.trans;
 				this.userData = response.data;
-				this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
-		        this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+				this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
 			},
 			error => {
 				console.log(error);
@@ -367,6 +441,9 @@ export class DataTableComponent implements OnInit {
 		this.searchForm.reset();
 		this.organisationForm.reset();
 		this.searchVal = '';
+		this.allIncomingDonationsAlive = true;
+		this.allCharityEventsAlive = true;
+		this.getAllData();
 	}
 
 	generateSearchData(data) {
@@ -385,13 +462,21 @@ export class DataTableComponent implements OnInit {
 
 	submitSearchForm() {
 		this.organisationForm.reset();
+		if(this.activeTab !== 'default') {
+			const defaultTab = this.defaultTab.nativeElement as HTMLElement;
+			defaultTab.click();
+		}
 		const controls = this.searchForm.controls;
 		if (this.searchForm.invalid) {
 			Object.keys(controls)
 				.forEach(controlName => controls[controlName].markAsTouched());
 			return;
 		}
-		const data = {'text': this.searchForm.value['search'].toLowerCase()};
+		const data = {
+			'addition': [],
+			'searchRequest': this.searchForm.value['search'].toLowerCase(),
+			'type': ''
+		};
 		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
