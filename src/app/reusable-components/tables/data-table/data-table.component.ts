@@ -47,6 +47,8 @@ export class DataTableComponent implements OnInit {
 
 	public listItems = [];
 
+	public activeOrganisationId = 'Все организации';
+
 	private httpAlive = true;
 
 	public listModel: any;
@@ -90,7 +92,7 @@ export class DataTableComponent implements OnInit {
 
 	generateListItem(arr) {
 		let newArr = [];
-		for (var i in arr) {
+		for (let i in arr) {
 			newArr.push(arr[i].name);
 		}
 		newArr.unshift('Все организации');
@@ -98,8 +100,9 @@ export class DataTableComponent implements OnInit {
 	}
 
 	getLocalOrganisationId(name) {
-		for(let i in this.organizationList) {
+		for (let i in this.organizationList) {
 			if (this.organizationList[i].name === name) {
+				this.activeOrganisationId = this.organizationList[i].ORGaddress;
 				return this.organizationList[i].ORGaddress;
 			}
 		}
@@ -113,6 +116,7 @@ export class DataTableComponent implements OnInit {
 		if (val.item === 'Все организации') {
 			this.allIncomingDonationsAlive = true;
 			this.allCharityEventsAlive = true;
+			this.activeOrganisationId = 'Все организации';
 			this.getAllData();
 		} else {
 			this.incomingDonationsAlive = true;
@@ -129,7 +133,7 @@ export class DataTableComponent implements OnInit {
 				response => {
 					this.organizationList = response;
 					this.listItems = this.generateListItem(this.organizationList);
-					//this.organisationForm.setValue({ name: 'Все организации' });
+					this.organisationForm.setValue({ name: 'Все организации' });
 					this.getAllData();
 				},
 				error => {
@@ -439,18 +443,22 @@ export class DataTableComponent implements OnInit {
 		this.incomingDonations = [];
 		this.charityEvents = [];
 		this.searchForm.reset();
-		this.organisationForm.reset();
 		this.searchVal = '';
 		this.allIncomingDonationsAlive = true;
 		this.allCharityEventsAlive = true;
-		this.getAllData();
+		if (this.activeOrganisationId === 'Все организации') {
+			this.getAllData();
+		} else {
+			this.organizationId = this.activeOrganisationId;
+			this.getOrganisationData();
+		}
 	}
 
 	generateSearchData(data) {
 		this.incomingDonations = [];
 		this.charityEvents = [];
 		for (let item in data) {
-			if(data[item].realWorldIdentifier !== undefined) {
+			if (data[item].realWorldIdentifier !== undefined) {
 				data[item]['type'] = 'donation';
 				this.incomingDonations.unshift(data[item]);
 			} else {
@@ -461,8 +469,7 @@ export class DataTableComponent implements OnInit {
 	}
 
 	submitSearchForm() {
-		this.organisationForm.reset();
-		if(this.activeTab !== 'default') {
+		if (this.activeTab !== 'default') {
 			const defaultTab = this.defaultTab.nativeElement as HTMLElement;
 			defaultTab.click();
 		}
@@ -477,6 +484,9 @@ export class DataTableComponent implements OnInit {
 			'searchRequest': this.searchForm.value['search'].toLowerCase(),
 			'type': ''
 		};
+		if (this.activeOrganisationId !== 'Все организации') {
+			data['searchRequest'] += ' ' + this.activeOrganisationId;
+		}
 		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
