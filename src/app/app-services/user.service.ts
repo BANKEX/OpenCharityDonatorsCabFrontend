@@ -36,7 +36,7 @@ export class UserService {
     this.userData['id'] = this.getUserDataLocal()['_id'];
     this.userData['userRole'] = 'USER';
     if (data === 'login') {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/donation']);
     }
    }
  }

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import { DashboardRoutes } from './dashboard-routing.module';
+import { DonationRoutes } from './donation-routing.module';
 
 import { CommonModule } from '@angular/common';
 
@@ -12,22 +12,20 @@ import { SearchPipe } from '../../app-pipes/search/search.pipe';
 
 
 // Dashboard Component
-import { DashboardComponent } from './dashboard.component';
-import { DataTableComponent } from '../../reusable-components/tables/data-table/data-table.component';
+import { DonationComponent } from './donation.component';
 
 @NgModule({
 	imports: [
-		RouterModule.forChild(DashboardRoutes),
+		RouterModule.forChild(DonationRoutes),
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		NgbModule
 	],
 	declarations: [
-		DashboardComponent,
-		DataTableComponent,
+		DonationComponent,
 		SearchPipe
 	],
 	providers: []
 })
-export class DashboardModule { }
+export class DonationModule { }

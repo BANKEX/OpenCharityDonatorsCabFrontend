@@ -9,7 +9,7 @@ import { CommonLayoutComponent } from './common/common-layout.component';
 export const appRoutes: Routes = [
 	{
 		path: '',
-		redirectTo: 'dashboard',
+		redirectTo: 'donation',
 		pathMatch: 'full',
 		data: {
 			roleAccess: ['USER']
@@ -20,8 +20,12 @@ export const appRoutes: Routes = [
 		component: CommonLayoutComponent,
 		children: [
 			{
-				path: 'dashboard',
-				loadChildren: './app-views/dashboard-view/dashboard.module#DashboardModule'
+				path: 'donation',
+				loadChildren: './app-views/donation-view/donation.module#DonationModule'
+			},
+			{
+				path: 'events',
+				loadChildren: './app-views/event-view/event.module#EventModule'
 			}
 		]
 	},

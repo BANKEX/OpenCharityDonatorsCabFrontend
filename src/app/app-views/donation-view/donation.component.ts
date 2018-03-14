@@ -5,9 +5,9 @@ import {Observable} from 'rxjs/Observable';
 import { DataTablesModule } from 'angular-datatables';
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { HttpService } from '../../../app-services/http.service';
-import { SocketService } from '../../../app-services/socket.service';
-import { UserService } from '../../../app-services/user.service';
+import { HttpService } from '../../app-services/http.service';
+import { SocketService } from '../../app-services/socket.service';
+import { UserService } from '../../app-services/user.service';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
@@ -15,11 +15,12 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-@Component ({
-	selector: 'app-data-table',
-	templateUrl: 'data-table.html'
+@Component({
+	templateUrl: 'donation.component.html',
+	providers: [HttpService]
 })
-export class DataTableComponent implements OnInit {
+
+export class DonationComponent implements OnInit {
 
 	searchForm: FormGroup;
 	organisationForm: FormGroup;
@@ -30,14 +31,12 @@ export class DataTableComponent implements OnInit {
 	@ViewChild('defaultTabEvents', {read: ElementRef}) defaultTabEvents: ElementRef;
 
 	public incomingDonations = [];
-	public charityEvents = [];
 
 	public searchVal = '';
 
 	public incomingDonationsFavorites = [];
-	public charityEventsFavorites = [];
 
-    public userRole: string;
+	public userRole: string;
 
 	public favoritesArr = [];
 	public activeMainTab = 'getIncomingDonation';
@@ -55,10 +54,8 @@ export class DataTableComponent implements OnInit {
 	private userData = {};
 
 	private incomingDonationsAlive = true;
-	private charityEventsAlive = true;
 
 	private allIncomingDonationsAlive = true;
-	private allCharityEventsAlive = true;
 
 	private organizationList = [];
 
@@ -71,7 +68,7 @@ export class DataTableComponent implements OnInit {
 		.debounceTime(200).distinctUntilChanged()
 		.merge(this.focus$)
 		.merge(this.click$.filter(() => !this.instance.isPopupOpen()))
-		.map(term => (term === '' ? this.listItems : this.listItems.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10));
+		.map(term => (term === '' || term === 'Все организации' ? this.listItems : this.listItems.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10));
 
 	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService, private fb: FormBuilder) {}
 
@@ -84,7 +81,7 @@ export class DataTableComponent implements OnInit {
 
 	initView() {
 		if (this.userService.userData['userRole'] === 'USER') {
-			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
+			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`, 'all');
 		} else {
 			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
 		}
@@ -109,18 +106,16 @@ export class DataTableComponent implements OnInit {
 	}
 
 	onItemSelected(val) {
+		console.log(val);
 		this.incomingDonations = [];
-		this.charityEvents = [];
 		this.searchForm.reset();
 		this.searchVal = '';
 		if (val.item === 'Все организации') {
 			this.allIncomingDonationsAlive = true;
-			this.allCharityEventsAlive = true;
 			this.activeOrganisationId = 'Все организации';
 			this.getAllData();
 		} else {
 			this.incomingDonationsAlive = true;
-			this.charityEventsAlive = true;
 			this.organizationId = this.getLocalOrganisationId(val.item);
 			this.getOrganisationData();
 		}
@@ -155,6 +150,7 @@ export class DataTableComponent implements OnInit {
 	}
 
 	getAllIncomingDonationsSockets(id) {
+		this.incomingDonationsFavorites = [];
 		this.socketService.getData(id)
 		.takeWhile(() => this.allIncomingDonationsAlive)
 		.subscribe((data) => {
@@ -166,53 +162,31 @@ export class DataTableComponent implements OnInit {
 				}
 			} else {
 				this.allIncomingDonationsAlive = false;
-				this.getAllDataCharityEvents();
-			}
-		});
-	}
-
-	getAllDataCharityEvents() {
-		let data = {};
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
-		.takeWhile(() => this.httpAlive)
-		.subscribe(
-			response => {
-				this.getAllCharityEventsSockets(response['_body']);
-			},
-			error => {
-				console.log(error);
-			});
-	}
-
-	getAllCharityEventsSockets(id) {
-		this.socketService.getData(id)
-		.takeWhile(() => this.allCharityEventsAlive)
-		.subscribe((data) => {
-			if (data !== 'close') {
-				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
-					this.charityEventsFavorites.unshift(JSON.parse(data));
-				} else {
-					this.charityEvents.unshift(JSON.parse(data));
-				}
-			} else {
-				this.allCharityEventsAlive = false;
+				this.listemIncomingDonationsSockets('newIncomingDonation');
 			}
 		});
 	}
 
 	getOrganisationData() {
-		this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
-		this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+		if (this.userService.userData['userRole'] === 'USER') {
+			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`, 'one');
+		} else {
+			this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+		}
 	}
 
-	getUserFavorites(url) {
+	getUserFavorites(url, data) {
 		this.httpService.httpGet(url)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
 				this.favoritesArr = response.data.trans;
 				this.userData = response.data;
-				this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+				if (data === 'all') {
+					this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+				} else {
+					this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+				}
 			},
 			error => {
 				console.log(error);
@@ -232,6 +206,7 @@ export class DataTableComponent implements OnInit {
 	}
 
 	getIncomingDonationsSockets(id) {
+		this.incomingDonationsFavorites = [];
 		this.socketService.getData(id)
 		.takeWhile(() => this.incomingDonationsAlive)
 		.subscribe((data) => {
@@ -262,48 +237,7 @@ export class DataTableComponent implements OnInit {
 		});
 	}
 
-	getCharityEvents(url) {
-		this.httpService.getSocketData(url)
-		.takeWhile(() => this.httpAlive)
-		.subscribe(
-			response => {
-				this.getCharityEventsSockets(response['_body']);
-			},
-			error => {
-				console.log(error);
-			});
-	}
 
-	getCharityEventsSockets(id) {
-		this.socketService.getData(id)
-		.takeWhile(() => this.charityEventsAlive)
-		.subscribe((data) => {
-			if (data !== 'close') {
-				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
-					this.charityEventsFavorites.unshift(JSON.parse(data));
-				} else {
-					this.charityEvents.unshift(JSON.parse(data));
-				}
-			} else {
-				this.charityEventsAlive = false;
-				this.listemCharityEventsSockets('newCharityEvent');
-			}
-		});
-	}
-
-	listemCharityEventsSockets(id) {
-		this.socketService.getData(id)
-		.takeWhile(() => this.httpAlive)
-		.subscribe((data) => {
-			if (data !== 'close') {
-				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
-					this.charityEventsFavorites.unshift(JSON.parse(data));
-				} else {
-					this.charityEvents.unshift(JSON.parse(data));
-				}
-			}
-		});
-	}
 
 	openDetailedtIncomingDonation(hash, tab) {
 		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonation/${hash}`)
@@ -333,22 +267,6 @@ export class DataTableComponent implements OnInit {
 		}
 	}
 
-	openDetailedtCharityEvent(hash, tab) {
-		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvent/${hash}`)
-		.takeWhile(() => this.httpAlive)
-		.subscribe(
-			response => {
-				let newData = response;
-				newData['type'] = 'events';
-				newData['history'] = this.getHistory(response.history);
-				newData['tab'] = tab;
-				this.addToTabs(newData);
-			},
-			error => {
-				console.log(error);
-			});
-	}
-
 	addToTabs(data) {
 		let tab = false;
 		const vm = this;
@@ -375,13 +293,8 @@ export class DataTableComponent implements OnInit {
 		for (const item in this.tabsArray) {
 			if (this.tabsArray[item].address === id) {
 				this.tabsArray.splice(this.tabsArray.indexOf(this.tabsArray[item]), 1);
-				if (this.activeTab === 'incomingDonation') {
-					const defaultTab = this.defaultTab.nativeElement as HTMLElement;
-					defaultTab.click();
-				} else if (this.activeTab === 'charityEven') {
-					const defaultTab = this.defaultTabEvents.nativeElement as HTMLElement;
-					defaultTab.click();
-				}
+				const defaultTab = this.defaultTab.nativeElement as HTMLElement;
+				defaultTab.click();
 			}
 		}
 	}
@@ -439,15 +352,14 @@ export class DataTableComponent implements OnInit {
 
 	clearSearch() {
 		this.incomingDonationsAlive = true;
-	 	this.charityEventsAlive = true;
 		this.incomingDonations = [];
-		this.charityEvents = [];
+		this.incomingDonationsFavorites = [];
+		this.favoritesArr = [];
 		this.searchForm.reset();
 		this.searchVal = '';
 		this.allIncomingDonationsAlive = true;
-		this.allCharityEventsAlive = true;
 		if (this.activeOrganisationId === 'Все организации') {
-			this.getAllData();
+			this.initView();
 		} else {
 			this.organizationId = this.activeOrganisationId;
 			this.getOrganisationData();
@@ -456,14 +368,14 @@ export class DataTableComponent implements OnInit {
 
 	generateSearchData(data) {
 		this.incomingDonations = [];
-		this.charityEvents = [];
+		this.incomingDonationsFavorites = [];
+		this.favoritesArr = [];
 		for (let item in data) {
-			if (data[item].realWorldIdentifier !== undefined) {
-				data[item]['type'] = 'donation';
-				this.incomingDonations.unshift(data[item]);
+			data[item]['type'] = 'donation';
+			if (this.favoritesArr.indexOf(data[item].address) > -1) {
+				this.incomingDonationsFavorites.unshift(data[item]);
 			} else {
-				data[item]['type'] = 'events';
-				this.charityEvents.unshift(data[item]);
+				this.incomingDonations.unshift(data[item]);
 			}
 		}
 	}
@@ -480,9 +392,9 @@ export class DataTableComponent implements OnInit {
 			return;
 		}
 		const data = {
-			'addition': [],
+			'addition': ['test'],
 			'searchRequest': this.searchForm.value['search'].toLowerCase(),
-			'type': ''
+			'type': 'incomingDonation'
 		};
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;

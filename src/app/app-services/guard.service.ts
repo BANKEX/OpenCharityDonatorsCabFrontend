@@ -15,7 +15,7 @@ export class GuardService implements CanActivate {
 
  checkUserRole(accessRoles, userRole) {
   if (accessRoles.data['roleAccess'].indexOf(userRole) === -1) {
-   this.router.navigate(['/dashboard']);
+   this.router.navigate(['/donation']);
    return false;
   } else {
    return true;
