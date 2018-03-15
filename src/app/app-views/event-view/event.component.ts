@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { HttpService } from '../../app-services/http.service';
 import { SocketService } from '../../app-services/socket.service';
 import { UserService } from '../../app-services/user.service';
+import { AppConfig } from '../../app-config/app.config';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
@@ -47,9 +48,10 @@ export class EventComponent implements OnInit {
 
 	public activeOrganisationId = 'Все организации';
 
+	public listModel: any;
+
 	private httpAlive = true;
 
-	public listModel: any;
 	private userData = {};
 
 	private charityEventsAlive = true;
@@ -262,10 +264,38 @@ export class EventComponent implements OnInit {
 				newData['type'] = 'events';
 				newData['history'] = this.getHistory(response.history);
 				newData['tab'] = tab;
-				this.addToTabs(newData);
+				this.getMetaCharityEvent(newData);
 			},
 			error => {
 				console.log(error);
+			});
+	}
+
+	getMetaCharityEvent(data) {
+		this.httpService.httpGet(`${AppConfig.API_URL_META}/api/meta/getData/${data['metaStorageHash']}`)
+		.takeWhile(() => this.httpAlive)
+		.subscribe(
+			response => {
+				let newData = data;
+				newData['meta'] = response;
+				newData['isMeta'] = true;
+				if (newData['meta']['description'] === undefined) {
+					newData['meta']['description'] = newData['meta']['data']['description']
+				}
+				if (newData['meta']['data'] !== undefined) {
+					if (newData['meta']['data']['image'] !== undefined) {
+						newData['isMetaImg'] = true;
+						newData['meta']['data']['image']['src'] = `${AppConfig.API_URL_META}/api/meta/getData/${newData['meta']['data']['image']['storageHash']}`;
+					}
+				}
+				this.addToTabs(newData);
+			},
+			error => {
+				let newData = data;
+				newData['isMeta'] = false;
+				newData['isMetaImg'] = false;
+				newData['meta'] = false;
+				this.addToTabs(newData);
 			});
 	}
 
@@ -399,15 +429,33 @@ export class EventComponent implements OnInit {
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
 		}
-		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
+		this.charityEventsFavorites = [];
+		this.charityEvents = [];
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/search`, data)
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.generateSearchData(Object.values(response));
+					this.submitSearchFormSockets(response['_body']);
 				},
 				error => {
 					console.log(error);
 				});
+	}
+
+	submitSearchFormSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.charityEventsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.charityEvents.unshift(JSON.parse(data));
+				}
+			} else {
+				this.listemCharityEventsSockets('newCharityEvent');
+			}
+		});
 	}
 
 	// tslint:disable-next-line:use-life-cycle-interface

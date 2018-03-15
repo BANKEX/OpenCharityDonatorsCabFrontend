@@ -124,22 +124,33 @@
                     <!-- Repeat tabs start -->
                     <div role="tabpanel" class="tab-pane" *ngFor="let item of tabsArray" [ngClass]="{'active':tabidex === item.address}">
                         <div class="table-overflow pdd-btm-20" *ngIf="item.type == 'events'">
-                            <div class="card card-body no-mrg-btm item-card">
-                                <h4 class="font-size-22 mrg-top-20">{{item.name}}</h4>
-                                <span class="card-address">{{item.address}}</span>
-                                <div class="padding-8-0">
-                                    <h5 class="text-bold">Payed:</h5>
-                                    <span class="display-block">{{item.payed}}</span>
+                            <div class="d-f">
+                                <div class="card card-body no-mrg-btm item-card">
+                                    <h4 class="font-size-22 mrg-top-20">{{item.name}}</h4>
+                                    <span class="card-address">{{item.address}}</span>
+                                    <div class="padding-8-0">
+                                        <h5 class="text-bold">Payed:</h5>
+                                        <span class="display-block">{{item.payed}}</span>
+                                    </div>
+                                    <div class="padding-8-0">
+                                        <h5 class="text-bold">Raised:</h5>
+                                        <span class="display-block">{{item.raised}}</span>
+                                    </div>
+                                    <div class="mrg-top-10">
+                                        <span class="font-size-13">{{item.date | date:'MM.dd.yyyy'}}</span>
+                                        <div class="float-right">
+                                            <span class="card-label-bold mrg-right-10">Target:</span>
+                                            <span class="card-label-yellow">{{item.target}}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="padding-8-0">
-                                    <h5 class="text-bold">Raised:</h5>
-                                    <span class="display-block">{{item.raised}}</span>
-                                </div>
-                                <div class="mrg-top-10">
-                                    <span class="font-size-13">{{item.date | date:'MM.dd.yyyy'}}</span>
-                                    <div class="float-right">
-                                        <span class="card-label-bold mrg-right-10">Target:</span>
-                                        <span class="card-label-yellow">{{item.target}}</span>
+                                <div *ngIf="item.isMeta" class="card card-body no-mrg-btm item-card text-align-center meta-wrapper">
+                                    <h4 class="font-size-20 meta-desc">{{item.meta.description}}</h4>
+                                    <div *ngIf="item.isMetaImg" class="conten-wrapper-ex">
+                                        <div class="img-wrapper">
+                                            <img [src]="item.meta.data.image.src" class="meta-image">
+                                        </div>
+                                        <a [href]="item.meta.data.image.src" [download]="item.meta.data.image.name + '.' + item.meta.data.image.extension">Download - {{item.meta.data.image.name}}.{{item.meta.data.image.extension}}</a>
                                     </div>
                                 </div>
                             </div>

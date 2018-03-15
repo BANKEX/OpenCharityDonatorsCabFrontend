@@ -106,7 +106,6 @@ export class DonationComponent implements OnInit {
 	}
 
 	onItemSelected(val) {
-		console.log(val);
 		this.incomingDonations = [];
 		this.searchForm.reset();
 		this.searchVal = '';
@@ -399,15 +398,33 @@ export class DonationComponent implements OnInit {
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
 		}
-		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
+		this.incomingDonations = [];
+		this.incomingDonationsFavorites = [];
+		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.generateSearchData(Object.values(response));
+					this.submitSearchFormSockets(response['_body']);
 				},
 				error => {
 					console.log(error);
 				});
+	}
+
+	submitSearchFormSockets(id) {
+		this.socketService.getData(id)
+		.takeWhile(() => this.httpAlive)
+		.subscribe((data) => {
+			if (data !== 'close') {
+				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
+					this.incomingDonationsFavorites.unshift(JSON.parse(data));
+				} else {
+					this.incomingDonations.unshift(JSON.parse(data));
+				}
+			} else {
+				this.listemIncomingDonationsSockets('newCharityEvent');
+			}
+		});
 	}
 
 	// tslint:disable-next-line:use-life-cycle-interface

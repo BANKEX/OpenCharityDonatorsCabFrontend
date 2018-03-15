@@ -3156,6 +3156,7 @@
 .item-card {
     margin: 20px;
     width: 500px;
+    max-width: 50%;
 }
 
 .card-address {
@@ -3188,4 +3189,27 @@
 .dropdown-menu {
     width: 100%;
     max-width: 300px;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.meta-wrapper {
+    align-items: center;
+    .meta-desc {
+        margin-bottom: 15px;
+    }
+    .img-wrapper {
+        width: 225px;
+        height: 225px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 15px;
+        .meta-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
 }
