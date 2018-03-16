@@ -2369,6 +2369,10 @@
     width: 100% !important;
 }
 
+.width-280p {
+    width: 280px;
+}
+
 .width-300p {
     width: 300px;
 }
@@ -2837,6 +2841,10 @@
     cursor: pointer;
 }
 
+.c-default {
+    cursor: default !important;
+}
+
 
 /* Position */
 
@@ -3188,7 +3196,7 @@
 
 .dropdown-menu {
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
 }
 
 .text-align-center {

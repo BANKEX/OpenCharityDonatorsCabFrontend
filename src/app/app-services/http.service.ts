@@ -79,6 +79,7 @@ export class HttpService {
 	headers.append('Content-Type', 'application/json');
 	const options = new RequestOptions({headers: headers});
 	return this.http.get(url, options)
+		.map(respose => respose.json() || '')
 		.map(respose => {
 		    return respose;
 		})

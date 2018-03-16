@@ -51,6 +51,9 @@ export class DonationComponent implements OnInit {
 	private httpAlive = true;
 
 	public listModel: any;
+
+	public itemsCount = 0;
+
 	private userData = {};
 
 	private incomingDonationsAlive = true;
@@ -68,7 +71,7 @@ export class DonationComponent implements OnInit {
 		.debounceTime(200).distinctUntilChanged()
 		.merge(this.focus$)
 		.merge(this.click$.filter(() => !this.instance.isPopupOpen()))
-		.map(term => (term === '' || term === 'Все организации' ? this.listItems : this.listItems.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10));
+		.map(term => this.listItems);
 
 	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService, private fb: FormBuilder) {}
 
@@ -137,11 +140,12 @@ export class DonationComponent implements OnInit {
 
 	getAllData() {
 		let data = {};
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/`, data)
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/`, data)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.getAllIncomingDonationsSockets(response['_body']);
+				this.itemsCount = response['quantity'];
+				this.getAllIncomingDonationsSockets(response['room']);
 			},
 			error => {
 				console.log(error);
@@ -197,7 +201,8 @@ export class DonationComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.getIncomingDonationsSockets(response['_body']);
+				this.itemsCount = response['quantity'];
+				this.getIncomingDonationsSockets(response['room']);
 			},
 			error => {
 				console.log(error);
@@ -337,9 +342,7 @@ export class DonationComponent implements OnInit {
 
 	initSearchForm() {
 		this.searchForm = this.fb.group({
-			search: ['',
-				Validators.required
-			]
+			search: ['']
 		});
 	}
 
@@ -391,20 +394,27 @@ export class DonationComponent implements OnInit {
 			return;
 		}
 		const data = {
-			'addition': ['test'],
+			'addition': [],
 			'searchRequest': this.searchForm.value['search'].toLowerCase(),
 			'type': 'incomingDonation'
 		};
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
 		}
+		if (data['searchRequest'] === '') {
+			this.allIncomingDonationsAlive = true;
+			this.activeOrganisationId = 'Все организации';
+			this.getAllData();
+			return;
+		}
 		this.incomingDonations = [];
 		this.incomingDonationsFavorites = [];
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.submitSearchFormSockets(response['_body']);
+					this.itemsCount = response['quantity'];
+					this.submitSearchFormSockets(response['room']);
 				},
 				error => {
 					console.log(error);

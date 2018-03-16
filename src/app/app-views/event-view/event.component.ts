@@ -50,6 +50,8 @@ export class EventComponent implements OnInit {
 
 	public listModel: any;
 
+	public itemsCount = 0;
+
 	private httpAlive = true;
 
 	private userData = {};
@@ -69,7 +71,7 @@ export class EventComponent implements OnInit {
 		.debounceTime(200).distinctUntilChanged()
 		.merge(this.focus$)
 		.merge(this.click$.filter(() => !this.instance.isPopupOpen()))
-		.map(term => (term === '' || term === 'Все организации' ? this.listItems : this.listItems.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10));
+		.map(term => this.listItems);
 
 	constructor(private dialog: MatDialog, private httpService: HttpService, private socketService: SocketService, public userService: UserService, private fb: FormBuilder) {}
 
@@ -138,11 +140,12 @@ export class EventComponent implements OnInit {
 
 	getAllData() {
 		let data = {};
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.getAllCharityEventsSockets(response['_body']);
+				this.itemsCount = response['quantity'];
+				this.getAllCharityEventsSockets(response['room']);
 			},
 			error => {
 				console.log(error);
@@ -151,11 +154,12 @@ export class EventComponent implements OnInit {
 
 	getAllDataCharityEvents() {
 		let data = {};
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.getAllCharityEventsSockets(response['_body']);
+				this.itemsCount = response['quantity'];
+				this.getAllCharityEventsSockets(response['room']);
 			},
 			error => {
 				console.log(error);
@@ -204,7 +208,8 @@ export class EventComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.getCharityEventsSockets(response['_body']);
+				this.itemsCount = response['quantity'];
+				this.getCharityEventsSockets(response['room']);
 			},
 			error => {
 				console.log(error);
@@ -370,9 +375,7 @@ export class EventComponent implements OnInit {
 
 	initSearchForm() {
 		this.searchForm = this.fb.group({
-			search: ['',
-				Validators.required
-			]
+			search: ['']
 		});
 	}
 
@@ -429,13 +432,20 @@ export class EventComponent implements OnInit {
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
 		}
+		if (data['searchRequest'] === '') {
+			this.allCharityEventsAlive = true;
+			this.activeOrganisationId = 'Все организации';
+			this.getAllData();
+			return;
+		}
 		this.charityEventsFavorites = [];
 		this.charityEvents = [];
-		this.httpService.httpPostEx(`${this.httpService.baseAPIurl}/api/dapp/search`, data)
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, data)
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.submitSearchFormSockets(response['_body']);
+					this.itemsCount = response['quantity'];
+					this.submitSearchFormSockets(response['room']);
 				},
 				error => {
 					console.log(error);

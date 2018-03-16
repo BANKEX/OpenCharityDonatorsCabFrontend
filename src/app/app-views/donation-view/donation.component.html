@@ -1,18 +1,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
+            <form class="form-horizontal width-450p relative" [formGroup]="searchForm" (submit)="submitSearchForm()">
+                <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search" [(ngModel)]="searchVal">
+                <div *ngIf="searchVal == ''" class="ei ei-close ei-search clear-search-icon c-default"></div>
+                <div *ngIf="searchVal != ''" class="ei ei-close clear-search-icon" (click)="clearSearch()"></div>
+            </form>
+        </div>
+        <div class="col-md-6 text-right">
             <div class="page-title inline-block mrg-right-10">
                 <h4>Выберите организацию</h4>
             </div>
             <form class="form-horizontal inline-block relative" [formGroup]="organisationForm">
-                <input id="typeahead-focus" type="text" class="form-control width-300p" [(ngModel)]="listModel" [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)" #instance="ngbTypeahead" placeholder="Организация"
+                <input id="typeahead-focus" type="text" class="form-control width-280p" [(ngModel)]="listModel" [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)" #instance="ngbTypeahead" placeholder="Организация"
                     (selectItem)="onItemSelected($event)" formControlName="name" />
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-horizontal width-450p relative pull-right" [formGroup]="searchForm" (submit)="submitSearchForm()">
-                <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search" [(ngModel)]="searchVal">
-                <div *ngIf="searchVal != ''" class="ei ei-close clear-search-icon" (click)="clearSearch()"></div>
             </form>
         </div>
     </div>
@@ -27,6 +28,9 @@
                         <li class="nav-item nav-item-tab pointer position-rel" *ngFor="let item of tabsArray">
                             <a *ngIf="item.type == 'donation'" class="nav-link pdd-right-25" [ngClass]="{'active':tabidex === item.address}" role="tab" data-toggle="tab" (click)="setTabValue('incomingDonation', item.address)">{{item.realWorldIdentifier}}</a>
                             <div class="ei ei-unchecked tab-close" (click)="removeFromTabs(item.address);"></div>
+                        </li>
+                        <li class="nav-item nav-item-tab pointer mrg-left-auto c-default" *ngIf="tabidex === 'card-tab-1'">
+                            <a class="nav-link pdd-right-25">Результатов: {{ itemsCount }}</a>
                         </li>
                     </ul>
                 </div>
