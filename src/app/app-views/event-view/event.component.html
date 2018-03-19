@@ -6,6 +6,10 @@
                 <div *ngIf="searchVal == ''" class="ei ei-close ei-search clear-search-icon c-default"></div>
                 <div *ngIf="searchVal != ''" class="ei ei-close clear-search-icon" (click)="clearSearch()"></div>
             </form>
+            <div class="checkbox">
+                <input id="userCash" name="userCash" type="checkbox" (change)="useCashAPI($event)" [(ngModel)]="checkboxValue">
+                <label for="userCash">Использовать кэш</label>
+            </div>
         </div>
         <div class="col-md-6 text-right">
             <div class="page-title inline-block mrg-right-10">

@@ -56,6 +56,9 @@ export class EventComponent implements OnInit {
 
 	private userData = {};
 
+	public checkboxValue = false;
+	private cashValue = '';
+
 	private charityEventsAlive = true;
 
 	private allCharityEventsAlive = true;
@@ -86,7 +89,7 @@ export class EventComponent implements OnInit {
 		if (this.userService.userData['userRole'] === 'USER') {
 			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`);
 		} else {
-			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations/?${this.cashValue}`);
 		}
 	}
 
@@ -139,13 +142,16 @@ export class EventComponent implements OnInit {
 	}
 
 	getAllData() {
-		let data = {};
-		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
+		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/all?${this.cashValue}`)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.itemsCount = response['quantity'];
-				this.getAllCharityEventsSockets(response['room']);
+				if (this.cashValue === '') {
+					this.itemsCount = response['quantity'];
+					this.getAllCharityEventsSockets(response['room']);
+				} else {
+					this.drawDBData(response);
+				}
 			},
 			error => {
 				console.log(error);
@@ -154,12 +160,16 @@ export class EventComponent implements OnInit {
 
 	getAllDataCharityEvents() {
 		let data = {};
-		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/`, data)
+		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/?${this.cashValue}`, data)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.itemsCount = response['quantity'];
-				this.getAllCharityEventsSockets(response['room']);
+				if (this.cashValue === '') {
+					this.itemsCount = response['quantity'];
+					this.getAllCharityEventsSockets(response['room']);
+				} else {
+					this.drawDBData(response);
+				}
 			},
 			error => {
 				console.log(error);
@@ -185,7 +195,7 @@ export class EventComponent implements OnInit {
 	}
 
 	getOrganisationData() {
-		this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}`);
+		this.getCharityEvents(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvents/${this.organizationId}?${this.cashValue}`);
 	}
 
 	getUserFavorites(url) {
@@ -195,7 +205,7 @@ export class EventComponent implements OnInit {
 			response => {
 				this.favoritesArr = response.data.trans;
 				this.userData = response.data;
-				this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+				this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations/?${this.cashValue}`);
 			},
 			error => {
 				console.log(error);
@@ -208,8 +218,12 @@ export class EventComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.itemsCount = response['quantity'];
-				this.getCharityEventsSockets(response['room']);
+				if (this.cashValue === '') {
+					this.itemsCount = response['quantity'];
+					this.getCharityEventsSockets(response['room']);
+				} else {
+					this.drawDBData(response);
+				}
 			},
 			error => {
 				console.log(error);
@@ -261,13 +275,16 @@ export class EventComponent implements OnInit {
 	}
 
 	openDetailedtCharityEvent(hash, tab) {
-		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvent/${hash}`)
+		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getCharityEvent/${hash}?${this.cashValue}`)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
 				let newData = response;
 				newData['type'] = 'events';
-				newData['history'] = this.getHistory(response.history);
+				newData['history'] = [];
+				if (response.history !== undefined) {
+					newData['history'] = this.getHistory(response.history);
+				}
 				newData['tab'] = tab;
 				this.getMetaCharityEvent(newData);
 			},
@@ -427,7 +444,8 @@ export class EventComponent implements OnInit {
 		const data = {
 			'addition': [],
 			'searchRequest': this.searchForm.value['search'].toLowerCase(),
-			'type': 'charityEvent'
+			'type': 'charityEvent',
+			'how': 'bc'
 		};
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
@@ -438,18 +456,36 @@ export class EventComponent implements OnInit {
 			this.getAllData();
 			return;
 		}
+		if (this.cashValue !== '') {
+			data['how'] = 'db';
+		}
 		this.charityEventsFavorites = [];
 		this.charityEvents = [];
 		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, data)
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.itemsCount = response['quantity'];
-					this.submitSearchFormSockets(response['room']);
+					if (this.cashValue === '') {
+						this.itemsCount = response['quantity'];
+						this.submitSearchFormSockets(response['room']);
+					} else {
+						this.drawDBData(response);
+					}
 				},
 				error => {
 					console.log(error);
 				});
+	}
+
+	drawDBData(data) {
+		this.itemsCount = data.length;
+		for (let i in data) {
+			if (this.favoritesArr.indexOf(data[i].address) > -1) {
+				this.charityEventsFavorites.unshift(data[i]);
+			} else {
+				this.charityEvents.unshift(data[i]);
+			}
+		}
 	}
 
 	submitSearchFormSockets(id) {
@@ -466,6 +502,14 @@ export class EventComponent implements OnInit {
 				this.listemCharityEventsSockets('newCharityEvent');
 			}
 		});
+	}
+
+	useCashAPI(event) {
+		if (this.checkboxValue === true) {
+			this.cashValue = `how=db`;
+		} else {
+			this.cashValue = ``;
+		}
 	}
 
 	// tslint:disable-next-line:use-life-cycle-interface

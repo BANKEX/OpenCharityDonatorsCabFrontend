@@ -18,6 +18,10 @@ export class SocketService {
 			this.socket.on(data, (dataArr) => {
 				observer.next(dataArr);
 			});
+
+			this.socket.on('connect_error', () => {
+				this.socket.close();
+			});
 		});
 	}
 

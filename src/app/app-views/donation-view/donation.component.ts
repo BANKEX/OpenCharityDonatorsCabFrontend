@@ -54,6 +54,9 @@ export class DonationComponent implements OnInit {
 
 	public itemsCount = 0;
 
+	public checkboxValue = false;
+	private cashValue = '';
+
 	private userData = {};
 
 	private incomingDonationsAlive = true;
@@ -86,7 +89,7 @@ export class DonationComponent implements OnInit {
 		if (this.userService.userData['userRole'] === 'USER') {
 			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`, 'all');
 		} else {
-			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+			this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations/?${this.cashValue}`);
 		}
 	}
 
@@ -139,13 +142,16 @@ export class DonationComponent implements OnInit {
 	}
 
 	getAllData() {
-		let data = {};
-		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/`, data)
+		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/all?${this.cashValue}`)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.itemsCount = response['quantity'];
-				this.getAllIncomingDonationsSockets(response['room']);
+				if (this.cashValue === '') {
+					this.itemsCount = response['quantity'];
+					this.getAllIncomingDonationsSockets(response['room']);
+				} else {
+					this.drawDBData(response);
+				}
 			},
 			error => {
 				console.log(error);
@@ -174,7 +180,7 @@ export class DonationComponent implements OnInit {
 		if (this.userService.userData['userRole'] === 'USER') {
 			this.getUserFavorites(`${this.httpService.baseAPIurl}/api/user/`, 'one');
 		} else {
-			this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+			this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}?${this.cashValue}`);
 		}
 	}
 
@@ -186,9 +192,9 @@ export class DonationComponent implements OnInit {
 				this.favoritesArr = response.data.trans;
 				this.userData = response.data;
 				if (data === 'all') {
-					this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations`);
+					this.getListData(`${this.httpService.baseAPIurl}/api/dapp/getOrganizations/?${this.cashValue}`);
 				} else {
-					this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}`);
+					this.getIncomingDonations(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonations/${this.organizationId}?${this.cashValue}`);
 				}
 			},
 			error => {
@@ -201,8 +207,12 @@ export class DonationComponent implements OnInit {
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
-				this.itemsCount = response['quantity'];
-				this.getIncomingDonationsSockets(response['room']);
+				if (this.cashValue === '') {
+					this.itemsCount = response['quantity'];
+					this.getIncomingDonationsSockets(response['room']);
+				} else {
+					this.drawDBData(response);
+				}
 			},
 			error => {
 				console.log(error);
@@ -244,13 +254,16 @@ export class DonationComponent implements OnInit {
 
 
 	openDetailedtIncomingDonation(hash, tab) {
-		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonation/${hash}`)
+		this.httpService.httpGet(`${this.httpService.baseAPIurl}/api/dapp/getIncomingDonation/${hash}?${this.cashValue}`)
 		.takeWhile(() => this.httpAlive)
 		.subscribe(
 			response => {
 				let newData = response;
 				newData['type'] = 'donation';
-				newData['history'] = this.getHistory(response.history);
+				newData['history'] = [];
+				if (response.history !== undefined) {
+					newData['history'] = this.getHistory(response.history);
+				}
 				newData['tab'] = tab;
 				this.addToTabs(newData);
 			},
@@ -396,7 +409,8 @@ export class DonationComponent implements OnInit {
 		const data = {
 			'addition': [],
 			'searchRequest': this.searchForm.value['search'].toLowerCase(),
-			'type': 'incomingDonation'
+			'type': 'incomingDonation',
+			'how': 'bc'
 		};
 		if (this.activeOrganisationId !== 'Все организации') {
 			data['searchRequest'] += ' ' + this.activeOrganisationId;
@@ -407,18 +421,36 @@ export class DonationComponent implements OnInit {
 			this.getAllData();
 			return;
 		}
+		if (this.cashValue !== '') {
+			data['how'] = 'db';
+		}
 		this.incomingDonations = [];
 		this.incomingDonationsFavorites = [];
 		this.httpService.httpPost(`${this.httpService.baseAPIurl}/api/dapp/search`, JSON.stringify(data))
 			.takeWhile(() => this.httpAlive)
 			.subscribe(
 				response => {
-					this.itemsCount = response['quantity'];
-					this.submitSearchFormSockets(response['room']);
+					if (this.cashValue === '') {
+						this.itemsCount = response['quantity'];
+						this.submitSearchFormSockets(response['room']);
+					} else {
+						this.drawDBData(response);
+					}
 				},
 				error => {
 					console.log(error);
 				});
+	}
+
+	drawDBData(data) {
+		this.itemsCount = data.length;
+		for (let i in data) {
+			if (this.favoritesArr.indexOf(data[i].address) > -1) {
+				this.incomingDonationsFavorites.unshift(data[i]);
+			} else {
+				this.incomingDonations.unshift(data[i]);
+			}
+		}
 	}
 
 	submitSearchFormSockets(id) {
@@ -435,6 +467,14 @@ export class DonationComponent implements OnInit {
 				this.listemIncomingDonationsSockets('newCharityEvent');
 			}
 		});
+	}
+
+	useCashAPI(event) {
+		if (this.checkboxValue === true) {
+			this.cashValue = `how=db`;
+		} else {
+			this.cashValue = ``;
+		}
 	}
 
 	// tslint:disable-next-line:use-life-cycle-interface
