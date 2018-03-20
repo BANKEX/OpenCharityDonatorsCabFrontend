@@ -10,17 +10,17 @@ export class SocketService {
 	private socket;
 
 	constructor() {
-		this.socket = io({path: `/api/ws`}); // AppConfig.API_URL,
+		this.socket = io(AppConfig.API_URL, {path: `/api/ws`}); // AppConfig.API_URL,
+
+		this.socket.on('connect_error', () => {
+			this.socket.close();
+		});
 	}
 
 	public getData = (data) => {
 		return Observable.create((observer) => {
 			this.socket.on(data, (dataArr) => {
 				observer.next(dataArr);
-			});
-
-			this.socket.on('connect_error', () => {
-				this.socket.close();
 			});
 		});
 	}

@@ -160,6 +160,7 @@ export class DonationComponent implements OnInit {
 
 	getAllIncomingDonationsSockets(id) {
 		this.incomingDonationsFavorites = [];
+		this.incomingDonations = [];
 		this.socketService.getData(id)
 		.takeWhile(() => this.allIncomingDonationsAlive)
 		.subscribe((data) => {
@@ -173,6 +174,7 @@ export class DonationComponent implements OnInit {
 				this.allIncomingDonationsAlive = false;
 				this.listemIncomingDonationsSockets('newIncomingDonation');
 			}
+			// console.log(data);
 		});
 	}
 
@@ -221,6 +223,7 @@ export class DonationComponent implements OnInit {
 
 	getIncomingDonationsSockets(id) {
 		this.incomingDonationsFavorites = [];
+		this.incomingDonations = [];
 		this.socketService.getData(id)
 		.takeWhile(() => this.incomingDonationsAlive)
 		.subscribe((data) => {
@@ -244,8 +247,10 @@ export class DonationComponent implements OnInit {
 			if (data !== 'close') {
 				if (this.favoritesArr.indexOf(JSON.parse(data).address) > -1) {
 					this.incomingDonationsFavorites.unshift(JSON.parse(data));
+					this.itemsCount++;
 				} else {
 					this.incomingDonations.unshift(JSON.parse(data));
+					this.itemsCount++;
 				}
 			}
 		});
