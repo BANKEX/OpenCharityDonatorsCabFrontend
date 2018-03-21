@@ -10,7 +10,7 @@ export class SocketService {
 	private socket;
 
 	constructor() {
-		this.socket = io(AppConfig.API_URL, {path: `/api/ws`}); // AppConfig.API_URL,
+		this.socket = io({path: `/api/ws`}); // AppConfig.API_URL,
 
 		this.socket.on('connect_error', () => {
 			this.socket.close();

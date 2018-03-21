@@ -449,6 +449,8 @@ export class DonationComponent implements OnInit {
 
 	drawDBData(data) {
 		this.itemsCount = data.length;
+		this.incomingDonationsFavorites = [];
+		this.incomingDonations = [];
 		for (let i in data) {
 			if (this.favoritesArr.indexOf(data[i].address) > -1) {
 				this.incomingDonationsFavorites.unshift(data[i]);

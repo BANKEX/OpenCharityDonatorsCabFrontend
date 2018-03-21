@@ -465,6 +465,8 @@ export class EventComponent implements OnInit {
 
 	drawDBData(data) {
 		this.itemsCount = data.length;
+		this.charityEventsFavorites = [];
+		this.charityEvents = [];
 		for (let i in data) {
 			if (this.favoritesArr.indexOf(data[i].address) > -1) {
 				this.charityEventsFavorites.unshift(data[i]);

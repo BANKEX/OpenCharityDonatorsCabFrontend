@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <form class="form-horizontal width-450p relative" [formGroup]="searchForm" (submit)="submitSearchForm()">
+            <form class="form-horizontal width-85 relative" [formGroup]="searchForm" (submit)="submitSearchForm()">
                 <input type="text" class="form-control mrg-btm-15" id="form-1-1" placeholder="Поиск" id="search" name="search" formControlName="search" [(ngModel)]="searchVal">
                 <div *ngIf="searchVal == ''" class="ei ei-close ei-search clear-search-icon c-default"></div>
                 <div *ngIf="searchVal != ''" class="ei ei-close clear-search-icon" (click)="clearSearch()"></div>
@@ -112,7 +112,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div *ngIf="incomingDonations.length == 0" class="table-no-item">
+                            <div *ngIf="incomingDonations.length == 0 && incomingDonationsFavorites.length == 0" class="table-no-item">
                                 <span>No items</span>
                             </div>
                         </div>
