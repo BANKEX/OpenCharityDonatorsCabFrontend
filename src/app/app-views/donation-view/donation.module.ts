@@ -8,10 +8,6 @@ import { DonationRoutes } from './donation-routing.module';
 
 import { CommonModule } from '@angular/common';
 
-import { SearchPipe } from '../../app-pipes/search/search.pipe';
-
-
-// Dashboard Component
 import { DonationComponent } from './donation.component';
 
 @NgModule({
@@ -23,8 +19,7 @@ import { DonationComponent } from './donation.component';
 		NgbModule
 	],
 	declarations: [
-		DonationComponent,
-		SearchPipe
+		DonationComponent
 	],
 	providers: []
 })

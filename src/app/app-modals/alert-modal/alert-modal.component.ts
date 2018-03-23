@@ -7,14 +7,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class AlertModalComponent {
 
-  constructor (private thisDialogRef: MatDialogRef<AlertModalComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
+	constructor (private thisDialogRef: MatDialogRef<AlertModalComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
-  onCloseSuccess() {
-	this.thisDialogRef.close(true);
-  }
+	onCloseSuccess() {
+		this.thisDialogRef.close(true);
+	}
 
-  onCloseCancel() {
-	this.thisDialogRef.close(false);
-  }
-
+	onCloseCancel() {
+		this.thisDialogRef.close(false);
+	}
 }

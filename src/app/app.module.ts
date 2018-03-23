@@ -34,31 +34,31 @@ import 'hammerjs';
 
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        RouterModule.forRoot(appRoutes, { useHash: true }),
+	imports: [
+		BrowserModule,
+		RouterModule.forRoot(appRoutes, { useHash: true }),
 		NgbModule.forRoot(),
-        PerfectScrollbarModule,
-        HttpModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        FormsModule,
+		PerfectScrollbarModule,
+		HttpModule,
+		MatDialogModule,
+		BrowserAnimationsModule,
+		FormsModule,
 		ReactiveFormsModule
-    ],
-    declarations: [
-        AppComponent,
-        CommonLayoutComponent,
-        AuthenticationLayoutComponent,
-        AlertModalComponent,
-        ForgotPassModalComponent,
+	],
+	declarations: [
+		AppComponent,
+		CommonLayoutComponent,
+		AuthenticationLayoutComponent,
+		AlertModalComponent,
+		ForgotPassModalComponent,
 		NotFound404Component
-    ],
-    entryComponents: [
-      AlertModalComponent,
-	  ForgotPassModalComponent
-    ],
-    providers: [GuardService, UserService, CookieService, SocketService],
-    bootstrap: [AppComponent]
+	],
+	entryComponents: [
+		AlertModalComponent,
+		ForgotPassModalComponent
+	],
+	providers: [GuardService, UserService, CookieService, SocketService],
+	bootstrap: [AppComponent]
 })
 
 
