@@ -2,7 +2,7 @@ version: '3'
 
 services:
   donators_front:
-    image: ${IMAGE}
+    image: $CI_REGISTRY_IMAGE
     container_name: donators_front
     restart: always
     expose:
